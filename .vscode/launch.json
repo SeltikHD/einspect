@@ -5,8 +5,7 @@
 			"name": "Flutter: Android Device",
 			"type": "dart",
 			"request": "launch",
-			"program": "lib/main.dart",
-			"deviceId": "android"
+			"program": "lib/main.dart"
 		},
 		{
 			"name": "API: Mock (npm start)",
