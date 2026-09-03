@@ -6,7 +6,8 @@ plugins {
 
 android {
     namespace = "com.example.orbytis_challenge"
-    compileSdk = flutter.compileSdkVersion
+    // flutter.compileSdkVersion defaults to 36, but flutter_secure_storage requires SDK 37+
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
