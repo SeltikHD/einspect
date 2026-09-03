@@ -1,0 +1,28 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Flutter: Android Device",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib/main.dart",
+			"deviceId": "android"
+		},
+		{
+			"name": "API: Mock (npm start)",
+			"type": "node-terminal",
+			"request": "launch",
+			"command": "npm start",
+			"cwd": "${workspaceFolder}/mock-api"
+		}
+	],
+	"compounds": [
+		{
+			"name": "App + Mock API",
+			"configurations": [
+				"API: Mock (npm start)",
+				"Flutter: Android Device"
+			]
+		}
+	]
+}
