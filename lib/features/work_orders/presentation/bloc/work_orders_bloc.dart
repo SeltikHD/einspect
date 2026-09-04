@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/models/work_order_model.dart';
+import '../../domain/entities/work_order_entity.dart';
 import '../../domain/repositories/work_orders_repository.dart';
 import 'work_orders_event.dart';
 import 'work_orders_state.dart';
 
 class WorkOrdersBloc extends Bloc<WorkOrdersEvent, WorkOrdersState> {
   final WorkOrdersRepository _repository;
-  List<WorkOrderModel> _cachedOrders = [];
+  List<WorkOrderEntity> _cachedOrders = [];
   WorkOrderSort _currentSort = WorkOrderSort.urgent;
   String? _currentStatus;
 
@@ -49,7 +49,7 @@ class WorkOrdersBloc extends Bloc<WorkOrdersEvent, WorkOrdersState> {
   }
 
   void _emitFilteredOrders(Emitter<WorkOrdersState> emit) {
-    var list = List<WorkOrderModel>.from(_cachedOrders);
+    var list = List<WorkOrderEntity>.from(_cachedOrders);
 
     // Filter by status
     if (_currentStatus != null) {

@@ -3,8 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
+import '../../../inspections/presentation/bloc/form/inspection_form_bloc.dart';
+import '../../../inspections/presentation/bloc/form/inspection_form_event.dart';
+import '../../../inspections/presentation/bloc/history/inspections_history_bloc.dart';
+import '../../../inspections/presentation/bloc/history/inspections_history_event.dart';
+import '../../../inspections/presentation/ui/inspection_form_page.dart';
+import '../../../inspections/presentation/ui/inspections_history_page.dart';
 import '../bloc/work_orders_bloc.dart';
 import '../bloc/work_orders_event.dart';
 import '../bloc/work_orders_state.dart';
@@ -67,6 +75,28 @@ class WorkOrdersPage extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          IconButton(
+            tooltip: 'Histórico de Inspeções',
+            icon: const Icon(Icons.history),
+            onPressed: () {
+              final authState = context.read<AuthBloc>().state;
+              final currentUserId = authState is Authenticated
+                  ? authState.user.id
+                  : '';
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => BlocProvider(
+                    create: (_) => sl<InspectionsHistoryBloc>()
+                      ..add(
+                        InspectionsHistoryFetchRequested(userId: currentUserId),
+                      ),
+                    child: const InspectionsHistoryPage(),
+                  ),
+                ),
+              );
+            },
           ),
           IconButton(
             tooltip: 'Sair',
@@ -210,7 +240,27 @@ class WorkOrdersPage extends StatelessWidget {
                         return WorkOrderCard(
                           workOrder: workOrder,
                           onTap: () {
-                            // TODO: Open the work order details
+                            final authState = context.read<AuthBloc>().state;
+                            final currentUserId = authState is Authenticated
+                                ? authState.user.id
+                                : '';
+
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider(
+                                  create: (_) => sl<InspectionFormBloc>()
+                                    ..add(
+                                      InspectionFormStarted(
+                                        userId: currentUserId,
+                                        workOrderId: workOrder.id,
+                                      ),
+                                    ),
+                                  child: InspectionFormPage(
+                                    workOrder: workOrder,
+                                  ),
+                                ),
+                              ),
+                            );
                           },
                         );
                       },

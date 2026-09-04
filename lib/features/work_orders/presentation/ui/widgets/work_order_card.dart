@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/models/work_order_model.dart';
+import '../../../domain/entities/work_order_entity.dart';
 
 class WorkOrderCard extends StatelessWidget {
-  final WorkOrderModel workOrder;
+  final WorkOrderEntity workOrder;
   final VoidCallback? onTap;
 
   const WorkOrderCard({super.key, required this.workOrder, this.onTap});

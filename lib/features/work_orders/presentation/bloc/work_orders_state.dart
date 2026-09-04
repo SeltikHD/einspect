@@ -1,4 +1,4 @@
-import '../../data/models/work_order_model.dart';
+import '../../domain/entities/work_order_entity.dart';
 import 'work_orders_event.dart';
 
 sealed class WorkOrdersState {
@@ -14,7 +14,7 @@ final class WorkOrdersLoading extends WorkOrdersState {
 }
 
 final class WorkOrdersSuccess extends WorkOrdersState {
-  final List<WorkOrderModel> workOrders;
+  final List<WorkOrderEntity> workOrders;
   final WorkOrderSort activeSort;
   final String? activeStatus;
 

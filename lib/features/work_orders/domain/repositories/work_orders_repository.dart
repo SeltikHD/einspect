@@ -1,5 +1,5 @@
-import '../../data/models/work_order_model.dart';
+import '../entities/work_order_entity.dart';
 
 abstract interface class WorkOrdersRepository {
-  Future<List<WorkOrderModel>> getWorkOrders({String? status});
+  Future<List<WorkOrderEntity>> getWorkOrders({String? status});
 }
