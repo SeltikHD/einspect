@@ -4,7 +4,7 @@
 		{
 			"label": "adb-reverse",
 			"type": "shell",
-			"command": "adb reverse tcp:3000 tcp:3000",
+			"command": "adb devices | ForEach-Object { if ($_ -match '^(\\S+)\\s+device$') { adb -s $matches[1] reverse tcp:3000 tcp:3000 } }",
 			"problemMatcher": []
 		},
 		{

@@ -7,7 +7,21 @@
 			"request": "launch",
 			"program": "lib/main.dart",
 			"flutterMode": "debug",
-			"preLaunchTask": "build_runner"
+			"preLaunchTask": "build_runner",
+			"toolArgs": [
+				"--dart-define=API_BASE_URL=http://localhost:3000"
+			]
+		},
+		{
+			"name": "Flutter: Android Emulator",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib/main.dart",
+			"flutterMode": "debug",
+			"preLaunchTask": "build_runner",
+			"toolArgs": [
+				"--dart-define=API_BASE_URL=http://10.0.2.2:3000"
+			]
 		},
 		{
 			"name": "API: Mock (npm start)",
@@ -19,12 +33,19 @@
 	],
 	"compounds": [
 		{
-			"name": "App + Mock API",
+			"name": "App (Device) + Mock API",
 			"configurations": [
 				"API: Mock (npm start)",
 				"Flutter: Android Device"
 			],
 			"preLaunchTask": "adb-reverse"
+		},
+		{
+			"name": "App (Emulator) + Mock API",
+			"configurations": [
+				"API: Mock (npm start)",
+				"Flutter: Android Emulator"
+			]
 		}
 	]
 }
