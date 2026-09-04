@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/widgets/app_filter_chip.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../domain/entities/inspection_entity.dart';
@@ -61,7 +62,7 @@ class InspectionsHistoryPage extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      _FilterChip(
+                      AppFilterChip(
                         label: 'Todas',
                         isSelected: currentFilter == null,
                         onSelected: () {
@@ -78,7 +79,7 @@ class InspectionsHistoryPage extends StatelessWidget {
                         },
                       ),
                       const SizedBox(width: 8),
-                      _FilterChip(
+                      AppFilterChip(
                         label: 'Rascunhos',
                         isSelected: currentFilter == InspectionStatus.draft,
                         onSelected: () {
@@ -96,7 +97,7 @@ class InspectionsHistoryPage extends StatelessWidget {
                         },
                       ),
                       const SizedBox(width: 8),
-                      _FilterChip(
+                      AppFilterChip(
                         label: 'Pendentes',
                         isSelected: currentFilter == InspectionStatus.pending,
                         onSelected: () {
@@ -113,7 +114,7 @@ class InspectionsHistoryPage extends StatelessWidget {
                         },
                       ),
                       const SizedBox(width: 8),
-                      _FilterChip(
+                      AppFilterChip(
                         label: 'Sincronizadas',
                         isSelected: currentFilter == InspectionStatus.synced,
                         onSelected: () {
@@ -131,7 +132,7 @@ class InspectionsHistoryPage extends StatelessWidget {
                         },
                       ),
                       const SizedBox(width: 8),
-                      _FilterChip(
+                      AppFilterChip(
                         label: 'Falhas',
                         isSelected: currentFilter == InspectionStatus.failed,
                         onSelected: () {
@@ -197,32 +198,6 @@ class InspectionsHistoryPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onSelected;
-
-  const _FilterChip({
-    required this.label,
-    required this.isSelected,
-    required this.onSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (_) => onSelected(),
-      selectedColor: const Color(0xFF0072CE),
-      labelStyle: TextStyle(
-        color: isSelected ? Colors.white : const Color(0xFF0B1E36),
-        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
     );
   }

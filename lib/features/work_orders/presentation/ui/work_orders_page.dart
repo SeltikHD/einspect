@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/widgets/app_filter_chip.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
@@ -124,7 +125,7 @@ class WorkOrdersPage extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      _FilterChipItem(
+                      AppFilterChip(
                         label: 'Todas',
                         isSelected: currentStatus == null,
                         onSelected: () => context.read<WorkOrdersBloc>().add(
@@ -132,7 +133,7 @@ class WorkOrdersPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      _FilterChipItem(
+                      AppFilterChip(
                         label: 'Abertas',
                         isSelected: currentStatus == 'open',
                         onSelected: () => context.read<WorkOrdersBloc>().add(
@@ -140,7 +141,7 @@ class WorkOrdersPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      _FilterChipItem(
+                      AppFilterChip(
                         label: 'Em Andamento',
                         isSelected: currentStatus == 'in_progress',
                         onSelected: () => context.read<WorkOrdersBloc>().add(
@@ -150,7 +151,7 @@ class WorkOrdersPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      _FilterChipItem(
+                      AppFilterChip(
                         label: 'Concluídas',
                         isSelected: currentStatus == 'done',
                         onSelected: () => context.read<WorkOrdersBloc>().add(
@@ -274,36 +275,6 @@ class WorkOrdersPage extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _FilterChipItem extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onSelected;
-
-  const _FilterChipItem({
-    required this.label,
-    required this.isSelected,
-    required this.onSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: Text(label),
-      selected: isSelected,
-      onSelected: (_) => onSelected(),
-      labelStyle: TextStyle(
-        fontSize: 13,
-        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        color: isSelected ? Colors.white : const Color(0xFF0B1E36),
-      ),
-      selectedColor: const Color(0xFF0072CE),
-      backgroundColor: const Color(0xFFF1F5F9),
-      side: BorderSide.none,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
     );
   }
 }

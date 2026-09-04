@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/widgets/app_status_badge.dart';
 import '../../../domain/entities/work_order_entity.dart';
 
 class WorkOrderCard extends StatelessWidget {
@@ -105,12 +106,12 @@ class WorkOrderCard extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      _Badge(
+                      AppStatusBadge(
                         label: _translatePriority(workOrder.priority),
                         color: _getPriorityColor(workOrder.priority),
                       ),
                       const SizedBox(width: 6),
-                      _Badge(
+                      AppStatusBadge(
                         label: _translateStatus(workOrder.status),
                         color: _getStatusColor(workOrder.status),
                       ),
@@ -169,33 +170,6 @@ class WorkOrderCard extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  final String label;
-  final Color color;
-
-  const _Badge({required this.label, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: color.withValues(alpha: 0.4)),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-          color: color,
         ),
       ),
     );
