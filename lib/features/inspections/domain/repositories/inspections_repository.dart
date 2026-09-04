@@ -8,16 +8,20 @@ abstract interface class InspectionsRepository {
   Future<void> submitInspection(InspectionEntity inspection);
 
   /// Iterates through pending or failed queue items and pushes them to the server.
-  Future<void> syncPendingQueue();
+  Future<void> syncPendingQueue({String? userId});
 
   /// Resets a failed inspection back to pending and re-executes the synchronization routine.
   Future<void> retryInspection(String clientId);
 
   /// Retrieves local inspections, optionally filtered by synchronization status.
   Future<List<InspectionEntity>> getInspections({
+    required String userId,
     InspectionStatus? statusFilter,
   });
 
   /// Finds an active or completed local inspection linked to a specific work order.
-  Future<InspectionEntity?> getInspectionByWorkOrderId(String workOrderId);
+  Future<InspectionEntity?> getInspectionByWorkOrderId({
+    required String workOrderId,
+    required String userId,
+  });
 }

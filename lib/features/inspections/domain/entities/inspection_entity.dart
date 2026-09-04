@@ -14,6 +14,7 @@ enum InspectionStatus {
 
 class InspectionEntity {
   final String clientId;
+  final String userId;
   final String workOrderId;
   final String? serverId;
   final String? observation;
@@ -30,6 +31,7 @@ class InspectionEntity {
 
   const InspectionEntity({
     required this.clientId,
+    required this.userId,
     required this.workOrderId,
     this.serverId,
     this.observation,
@@ -45,6 +47,10 @@ class InspectionEntity {
     required this.updatedAt,
   });
 
+  /// Once synchronized or awaiting sync in queue, the inspection is immutable to prevent data inconsistency.
+  bool get isReadOnly =>
+      status == InspectionStatus.synced || status == InspectionStatus.pending;
+
   /// Validates mandatory operational constraints before queuing for remote dispatch.
   /// Minimum length requirements and mandatory media are enforced here prior to API submission.
   bool get isValidForSubmission {
@@ -58,6 +64,7 @@ class InspectionEntity {
 
   InspectionEntity copyWith({
     String? clientId,
+    String? userId,
     String? workOrderId,
     String? serverId,
     String? observation,
@@ -74,6 +81,7 @@ class InspectionEntity {
   }) {
     return InspectionEntity(
       clientId: clientId ?? this.clientId,
+      userId: userId ?? this.userId,
       workOrderId: workOrderId ?? this.workOrderId,
       serverId: serverId ?? this.serverId,
       observation: observation ?? this.observation,
