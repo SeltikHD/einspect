@@ -18,14 +18,14 @@ final class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
   }) async {
-    final session = await _remoteDataSource.login(
+    final model = await _remoteDataSource.login(
       email: email,
       password: password,
     );
 
     // Securely cache JWT for downstream interceptors
-    await _localDataSource.saveToken(session.accessToken);
-    return session;
+    await _localDataSource.saveToken(model.accessToken);
+    return model.toEntity();
   }
 
   @override

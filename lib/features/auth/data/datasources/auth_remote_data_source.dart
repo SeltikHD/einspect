@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../domain/entities/user_entity.dart';
 import '../models/login_response_model.dart';
+import '../models/user_model.dart';
 
 abstract interface class AuthRemoteDataSource {
   Future<LoginResponseModel> login({
@@ -66,13 +67,7 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw Exception('Perfil do usuário não encontrado');
       }
 
-      final data = response.data!;
-      return UserEntity(
-        id: data['id'] as String,
-        name: data['name'] as String,
-        email: data['email'] as String,
-        role: data['role'] as String,
-      );
+      return UserModel.fromJson(response.data!).toEntity();
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         throw Exception('Sessão expirada ou não autorizado');
