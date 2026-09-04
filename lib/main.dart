@@ -100,7 +100,8 @@ class AuthSessionGatekeeper extends StatelessWidget {
         if (state is Authenticated) {
           return BlocProvider<WorkOrdersBloc>(
             create: (_) =>
-                sl<WorkOrdersBloc>()..add(const WorkOrdersFetchRequested()),
+                sl<WorkOrdersBloc>()
+                  ..add(WorkOrdersFetchRequested(userId: state.user.id)),
             child: const WorkOrdersPage(),
           );
         }

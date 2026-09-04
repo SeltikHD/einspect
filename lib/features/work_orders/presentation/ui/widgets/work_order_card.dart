@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/widgets/app_status_badge.dart';
+import '../../../../inspections/domain/entities/inspection_entity.dart';
 import '../../../domain/entities/work_order_entity.dart';
 
 class WorkOrderCard extends StatelessWidget {
   final WorkOrderEntity workOrder;
+  final InspectionStatus? localInspectionStatus;
   final VoidCallback? onTap;
 
-  const WorkOrderCard({super.key, required this.workOrder, this.onTap});
+  const WorkOrderCard({
+    super.key,
+    required this.workOrder,
+    this.localInspectionStatus,
+    this.onTap,
+  });
 
   String _translatePriority(String priority) {
     switch (priority.toLowerCase()) {
@@ -67,6 +74,20 @@ class WorkOrderCard extends StatelessWidget {
     }
   }
 
+  (String, Color)? _getInspectionBadge(InspectionStatus? status) {
+    if (status == null) return null;
+    switch (status) {
+      case InspectionStatus.draft:
+        return ('RASCUNHO LOCAL', Colors.blueGrey);
+      case InspectionStatus.pending:
+        return ('EM FILA (PENDENTE)', const Color(0xFFE65100));
+      case InspectionStatus.synced:
+        return ('INSPEÇÃO SINCRONIZADA', const Color(0xFF2E7D32));
+      case InspectionStatus.failed:
+        return ('FALHA NO SYNC', const Color(0xFFD32F2F));
+    }
+  }
+
   String _formatDateTime(DateTime dt) {
     final d = dt.day.toString().padLeft(2, '0');
     final m = dt.month.toString().padLeft(2, '0');
@@ -78,6 +99,8 @@ class WorkOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final inspectionBadge = _getInspectionBadge(localInspectionStatus);
+
     return Card(
       elevation: 0,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -168,6 +191,13 @@ class WorkOrderCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (inspectionBadge != null) ...[
+                const SizedBox(height: 10),
+                AppStatusBadge(
+                  label: inspectionBadge.$1,
+                  color: inspectionBadge.$2,
+                ),
+              ],
             ],
           ),
         ),

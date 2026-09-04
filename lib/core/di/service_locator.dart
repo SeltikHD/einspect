@@ -94,7 +94,10 @@ Future<void> setupServiceLocator() async {
   );
 
   sl.registerFactory<WorkOrdersBloc>(
-    () => WorkOrdersBloc(repository: sl<WorkOrdersRepository>()),
+    () => WorkOrdersBloc(
+      repository: sl<WorkOrdersRepository>(),
+      inspectionsRepository: sl<InspectionsRepository>(),
+    ),
   );
 
   sl.registerFactory<InspectionFormBloc>(

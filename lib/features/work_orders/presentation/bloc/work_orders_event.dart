@@ -11,9 +11,10 @@ sealed class WorkOrdersEvent {
 }
 
 final class WorkOrdersFetchRequested extends WorkOrdersEvent {
+  final String userId;
   final Completer<void>? completer;
 
-  const WorkOrdersFetchRequested({this.completer});
+  const WorkOrdersFetchRequested({required this.userId, this.completer});
 }
 
 final class WorkOrdersFilterChanged extends WorkOrdersEvent {

@@ -1,3 +1,4 @@
+import '../../../inspections/domain/entities/inspection_entity.dart';
 import '../../domain/entities/work_order_entity.dart';
 import 'work_orders_event.dart';
 
@@ -15,11 +16,13 @@ final class WorkOrdersLoading extends WorkOrdersState {
 
 final class WorkOrdersSuccess extends WorkOrdersState {
   final List<WorkOrderEntity> workOrders;
+  final Map<String, InspectionStatus> inspectionStatuses;
   final WorkOrderSort activeSort;
   final String? activeStatus;
 
   const WorkOrdersSuccess({
     required this.workOrders,
+    this.inspectionStatuses = const {},
     this.activeSort = WorkOrderSort.urgent,
     this.activeStatus,
   });

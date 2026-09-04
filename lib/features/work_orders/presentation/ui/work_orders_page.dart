@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/widgets/app_filter_chip.dart';
+import '../../../../core/widgets/offline_banner.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
@@ -22,16 +23,26 @@ import 'widgets/work_order_card.dart';
 class WorkOrdersPage extends StatelessWidget {
   const WorkOrdersPage({super.key});
 
+  String _getUserId(BuildContext context) {
+    final state = context.read<AuthBloc>().state;
+    return state is Authenticated ? state.user.id : '';
+  }
+
   Future<void> _refresh(BuildContext context) {
     final completer = Completer<void>();
     context.read<WorkOrdersBloc>().add(
-      WorkOrdersFetchRequested(completer: completer),
+      WorkOrdersFetchRequested(
+        userId: _getUserId(context),
+        completer: completer,
+      ),
     );
     return completer.future;
   }
 
   @override
   Widget build(BuildContext context) {
+    final userId = _getUserId(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ordens de Serviço'),
@@ -80,23 +91,17 @@ class WorkOrdersPage extends StatelessWidget {
           IconButton(
             tooltip: 'Histórico de Inspeções',
             icon: const Icon(Icons.history),
-            onPressed: () {
-              final authState = context.read<AuthBloc>().state;
-              final currentUserId = authState is Authenticated
-                  ? authState.user.id
-                  : '';
-
-              Navigator.of(context).push(
+            onPressed: () async {
+              await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => BlocProvider(
                     create: (_) => sl<InspectionsHistoryBloc>()
-                      ..add(
-                        InspectionsHistoryFetchRequested(userId: currentUserId),
-                      ),
+                      ..add(InspectionsHistoryFetchRequested(userId: userId)),
                     child: const InspectionsHistoryPage(),
                   ),
                 ),
               );
+              if (context.mounted) _refresh(context);
             },
           ),
           IconButton(
@@ -109,7 +114,9 @@ class WorkOrdersPage extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Fitler topbar
+          const OfflineBanner(),
+
+          // Filter topbar
           Container(
             color: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -194,9 +201,7 @@ class WorkOrdersPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           ElevatedButton.icon(
-                            onPressed: () => context.read<WorkOrdersBloc>().add(
-                              const WorkOrdersFetchRequested(),
-                            ),
+                            onPressed: () => _refresh(context),
                             icon: const Icon(Icons.refresh),
                             label: const Text('Tentar novamente'),
                           ),
@@ -238,22 +243,21 @@ class WorkOrdersPage extends StatelessWidget {
                       itemCount: state.workOrders.length,
                       itemBuilder: (context, index) {
                         final workOrder = state.workOrders[index];
+                        final inspectionStatus =
+                            state.inspectionStatuses[workOrder.id];
+
                         return WorkOrderCard(
                           workOrder: workOrder,
-                          onTap: () {
-                            final authState = context.read<AuthBloc>().state;
-                            final currentUserId = authState is Authenticated
-                                ? authState.user.id
-                                : '';
-
-                            Navigator.of(context).push(
+                          localInspectionStatus: inspectionStatus,
+                          onTap: () async {
+                            await Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (_) => BlocProvider(
                                   create: (_) => sl<InspectionFormBloc>()
                                     ..add(
                                       InspectionFormStarted(
-                                        userId: currentUserId,
                                         workOrderId: workOrder.id,
+                                        userId: userId,
                                       ),
                                     ),
                                   child: InspectionFormPage(
@@ -262,6 +266,7 @@ class WorkOrdersPage extends StatelessWidget {
                                 ),
                               ),
                             );
+                            if (context.mounted) _refresh(context);
                           },
                         );
                       },
