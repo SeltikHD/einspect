@@ -7,6 +7,9 @@ import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
+import '../../features/work_orders/data/datasources/work_orders_remote_data_source.dart';
+import '../../features/work_orders/data/repositories/work_orders_repository_impl.dart';
+import '../../features/work_orders/domain/repositories/work_orders_repository.dart';
 import '../database/db_helper.dart';
 import '../database/tables/database_table.dart';
 import '../database/tables/inspections_table.dart';
@@ -38,6 +41,10 @@ Future<void> setupServiceLocator() async {
     () => AuthRemoteDataSourceImpl(dio: sl<Dio>()),
   );
 
+  sl.registerLazySingleton<WorkOrdersRemoteDataSource>(
+    () => WorkOrdersRemoteDataSourceImpl(dio: sl<Dio>()),
+  );
+
   sl.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(storage: sl<FlutterSecureStorage>()),
   );
@@ -47,6 +54,12 @@ Future<void> setupServiceLocator() async {
     () => AuthRepositoryImpl(
       remoteDataSource: sl<AuthRemoteDataSource>(),
       localDataSource: sl<AuthLocalDataSource>(),
+    ),
+  );
+
+  sl.registerLazySingleton<WorkOrdersRepository>(
+    () => WorkOrdersRepositoryImpl(
+      remoteDataSource: sl<WorkOrdersRemoteDataSource>(),
     ),
   );
 
