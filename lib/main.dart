@@ -6,6 +6,9 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/ui/login_page.dart';
+import 'features/work_orders/presentation/bloc/work_orders_bloc.dart';
+import 'features/work_orders/presentation/bloc/work_orders_event.dart';
+import 'features/work_orders/presentation/ui/work_orders_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -86,25 +89,10 @@ class AuthSessionGatekeeper extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is Authenticated) {
-          // Placeholder scaffold representing the protected Work Orders feature
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Ordens de Serviço'),
-              actions: [
-                IconButton(
-                  tooltip: 'Sair',
-                  icon: const Icon(Icons.logout),
-                  onPressed: () =>
-                      context.read<AuthBloc>().add(const AuthLogoutRequested()),
-                ),
-              ],
-            ),
-            body: Center(
-              child: Text(
-                'Bem-vindo, ${state.user.name}',
-                style: const TextStyle(fontSize: 18),
-              ),
-            ),
+          return BlocProvider<WorkOrdersBloc>(
+            create: (_) =>
+                sl<WorkOrdersBloc>()..add(const WorkOrdersFetchRequested()),
+            child: const WorkOrdersPage(),
           );
         }
 
