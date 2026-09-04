@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../work_orders/domain/entities/work_order_entity.dart';
@@ -41,16 +40,6 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
         InspectionPhotoSelected(file.path),
       );
     }
-  }
-
-  double? _calculateGeofenceDistance(double? currentLat, double? currentLng) {
-    if (currentLat == null || currentLng == null) return null;
-    return Geolocator.distanceBetween(
-      currentLat,
-      currentLng,
-      widget.workOrder.latitude,
-      widget.workOrder.longitude,
-    );
   }
 
   @override
@@ -106,13 +95,6 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
             state.observation.isNotEmpty) {
           _observationController.text = state.observation;
         }
-
-        final distance = _calculateGeofenceDistance(
-          state.latitude,
-          state.longitude,
-        );
-        // Business rule: warn technician if inspection is conducted further than 200m from asset
-        final isOutOfGeofence = distance != null && distance > 200.0;
 
         return Scaffold(
           appBar: AppBar(title: Text('Inspeção: ${widget.workOrder.code}')),
@@ -322,7 +304,7 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                 ),
                 const SizedBox(height: 8),
 
-                if (isOutOfGeofence && !state.isReadOnly) ...[
+                if (state.isOutOfGeofence && !state.isReadOnly) ...[
                   Container(
                     margin: const EdgeInsets.only(top: 8, bottom: 8),
                     padding: const EdgeInsets.all(12),
@@ -340,7 +322,7 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Atenção: Você está a ${distance.toStringAsFixed(0)}m do ponto programado da OS (limite recomendado: 200m).',
+                            'Atenção: Você está a ${state.geofenceDistanceMeters!.toStringAsFixed(0)}m do ponto programado da OS (limite recomendado: 200m).',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,

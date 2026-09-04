@@ -18,6 +18,9 @@ class InspectionFormState {
   final String? photoPath;
   final double? latitude;
   final double? longitude;
+  final double targetLatitude;
+  final double targetLongitude;
+  final double? geofenceDistanceMeters;
   final InspectionStatus status;
   final bool isReadOnly;
   final bool isFetchingLocation;
@@ -33,12 +36,19 @@ class InspectionFormState {
     this.photoPath,
     this.latitude,
     this.longitude,
+    this.targetLatitude = 0.0,
+    this.targetLongitude = 0.0,
+    this.geofenceDistanceMeters,
     this.status = InspectionStatus.draft,
     this.isReadOnly = false,
     this.isFetchingLocation = false,
     this.submissionStatus = FormSubmissionStatus.idle,
     this.errorMessage,
   });
+
+  /// Business rule: Warn technician if inspection is executed > 200m away from asset
+  bool get isOutOfGeofence =>
+      geofenceDistanceMeters != null && geofenceDistanceMeters! > 200.0;
 
   /// Business validation rule: 10+ char observation, valid photo path, and captured coordinates.
   bool get isValidForCompletion =>
@@ -59,6 +69,9 @@ class InspectionFormState {
     bool clearPhoto = false,
     double? latitude,
     double? longitude,
+    double? targetLatitude,
+    double? targetLongitude,
+    double? geofenceDistanceMeters,
     InspectionStatus? status,
     bool? isReadOnly,
     bool? isFetchingLocation,
@@ -74,6 +87,10 @@ class InspectionFormState {
       photoPath: clearPhoto ? null : (photoPath ?? this.photoPath),
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      targetLatitude: targetLatitude ?? this.targetLatitude,
+      targetLongitude: targetLongitude ?? this.targetLongitude,
+      geofenceDistanceMeters:
+          geofenceDistanceMeters ?? this.geofenceDistanceMeters,
       status: status ?? this.status,
       isReadOnly: isReadOnly ?? this.isReadOnly,
       isFetchingLocation: isFetchingLocation ?? this.isFetchingLocation,

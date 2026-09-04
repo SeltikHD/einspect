@@ -258,6 +258,8 @@ class WorkOrdersPage extends StatelessWidget {
                                       InspectionFormStarted(
                                         workOrderId: workOrder.id,
                                         userId: userId,
+                                        targetLatitude: workOrder.latitude,
+                                        targetLongitude: workOrder.longitude
                                       ),
                                     ),
                                   child: InspectionFormPage(

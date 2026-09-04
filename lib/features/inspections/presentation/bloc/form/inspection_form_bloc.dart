@@ -36,11 +36,24 @@ class InspectionFormBloc
     );
 
     if (existing != null) {
+      double? distance;
+      if (existing.latitude != null && existing.longitude != null) {
+        distance = Geolocator.distanceBetween(
+          existing.latitude!,
+          existing.longitude!,
+          event.targetLatitude,
+          event.targetLongitude,
+        );
+      }
+
       emit(
         InspectionFormState(
           clientId: existing.clientId,
           userId: existing.userId,
           workOrderId: existing.workOrderId,
+          targetLatitude: event.targetLatitude,
+          targetLongitude: event.targetLongitude,
+          geofenceDistanceMeters: distance,
           observation: existing.observation ?? '',
           condition: existing.condition,
           photoPath: existing.photoPath,
@@ -57,6 +70,8 @@ class InspectionFormBloc
           clientId: const Uuid().v4(),
           userId: event.userId,
           workOrderId: event.workOrderId,
+          targetLatitude: event.targetLatitude,
+          targetLongitude: event.targetLongitude,
         ),
       );
     }
@@ -157,11 +172,20 @@ class InspectionFormBloc
         ),
       );
 
+      // Calculates geofence boundary distance as part of domain verification
+      final distance = Geolocator.distanceBetween(
+        position.latitude,
+        position.longitude,
+        state.targetLatitude,
+        state.targetLongitude,
+      );
+
       emit(
         state.copyWith(
           isFetchingLocation: false,
           latitude: position.latitude,
           longitude: position.longitude,
+          geofenceDistanceMeters: distance,
         ),
       );
     } catch (e) {
@@ -199,7 +223,9 @@ class InspectionFormBloc
 
       await _repository.saveDraft(entity);
 
-      emit(state.copyWith(submissionStatus: FormSubmissionStatus.successDrafted));
+      emit(
+        state.copyWith(submissionStatus: FormSubmissionStatus.successDrafted),
+      );
     } catch (e) {
       emit(
         state.copyWith(

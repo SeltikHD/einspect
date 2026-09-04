@@ -6,10 +6,14 @@ sealed class InspectionFormEvent {
 final class InspectionFormStarted extends InspectionFormEvent {
   final String workOrderId;
   final String userId;
+  final double targetLatitude;
+  final double targetLongitude;
 
   const InspectionFormStarted({
     required this.workOrderId,
     required this.userId,
+    required this.targetLatitude,
+    required this.targetLongitude,
   });
 }
 
