@@ -226,7 +226,7 @@ class InspectionFormBloc
         photoPath: state.photoPath,
         latitude: state.latitude,
         longitude: state.longitude,
-        status: InspectionStatus.pending,
+        status: InspectionStatus.draft,
         capturedAt: now,
         createdAt: now,
         updatedAt: now,

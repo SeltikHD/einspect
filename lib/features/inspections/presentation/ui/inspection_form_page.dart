@@ -108,7 +108,7 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                         Expanded(
                           child: Text(
                             state.status == InspectionStatus.synced
-                                ? 'Inspeção sincronizada com sucesso. Registro somente leitura.'
+                                ? 'Inspeção sincronizada com sucesso.'
                                 : 'Inspeção concluída e aguardando envio na fila de sincronização.',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
@@ -189,7 +189,7 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                 ),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<String>(
-                  value: state.condition,
+                  initialValue: state.condition,
                   hint: const Text('Selecione uma condição'),
                   items: const [
                     DropdownMenuItem(value: 'bom', child: Text('Bom')),

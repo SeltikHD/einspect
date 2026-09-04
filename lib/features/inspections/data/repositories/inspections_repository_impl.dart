@@ -28,7 +28,8 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
 
   @override
   Future<void> submitInspection(InspectionEntity inspection) async {
-    if (inspection.isReadOnly) {
+    final existing = await _localDataSource.findByClientId(inspection.clientId);
+    if (existing != null && existing.toEntity().isReadOnly) {
       throw StateError('Esta inspeção já foi finalizada.');
     }
 
