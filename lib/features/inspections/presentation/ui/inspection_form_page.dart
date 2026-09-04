@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../work_orders/domain/entities/work_order_entity.dart';
@@ -42,15 +43,50 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
     }
   }
 
+  double? _calculateGeofenceDistance(double? currentLat, double? currentLng) {
+    if (currentLat == null || currentLng == null) return null;
+    return Geolocator.distanceBetween(
+      currentLat,
+      currentLng,
+      widget.workOrder.latitude,
+      widget.workOrder.longitude,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<InspectionFormBloc, InspectionFormState>(
       listener: (context, state) {
-        if (state.submissionStatus == FormSubmissionStatus.success) {
+        if (state.submissionStatus == FormSubmissionStatus.successSynced) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Inspeção processada com sucesso!'),
+              content: Text('Inspeção enviada e sincronizada com sucesso!'),
               backgroundColor: Color(0xFF2E7D32),
+            ),
+          );
+          Navigator.of(context).pop();
+        }
+
+        if (state.submissionStatus ==
+            FormSubmissionStatus.successQueuedOffline) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Sem conexão no momento. Inspeção salva na fila local e será sincronizada automaticamente.',
+              ),
+              backgroundColor: Color(0xFFE65100),
+              duration: Duration(seconds: 4),
+            ),
+          );
+          Navigator.of(context).pop();
+        }
+
+        if (state.submissionStatus == FormSubmissionStatus.successDrafted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Rascunho salvo com sucesso.'),
+              backgroundColor: Colors.blueAccent,
+              duration: Duration(seconds: 4),
             ),
           );
           Navigator.of(context).pop();
@@ -70,6 +106,13 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
             state.observation.isNotEmpty) {
           _observationController.text = state.observation;
         }
+
+        final distance = _calculateGeofenceDistance(
+          state.latitude,
+          state.longitude,
+        );
+        // Business rule: warn technician if inspection is conducted further than 200m from asset
+        final isOutOfGeofence = distance != null && distance > 200.0;
 
         return Scaffold(
           appBar: AppBar(title: Text('Inspeção: ${widget.workOrder.code}')),
@@ -277,6 +320,39 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                   'Localização GPS *',
                   style: TextStyle(fontWeight: FontWeight.w600),
                 ),
+                const SizedBox(height: 8),
+
+                if (isOutOfGeofence && !state.isReadOnly) ...[
+                  Container(
+                    margin: const EdgeInsets.only(top: 8, bottom: 8),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.amber.shade400),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.amber.shade900,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Atenção: Você está a ${distance.toStringAsFixed(0)}m do ponto programado da OS (limite recomendado: 200m).',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.amber.shade900,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.all(12),

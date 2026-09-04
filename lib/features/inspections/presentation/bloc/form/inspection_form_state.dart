@@ -1,6 +1,13 @@
 import '../../../domain/entities/inspection_entity.dart';
 
-enum FormSubmissionStatus { idle, submitting, success, failure }
+enum FormSubmissionStatus {
+  idle,
+  submitting,
+  successDrafted,
+  successSynced,
+  successQueuedOffline,
+  failure,
+}
 
 class InspectionFormState {
   final String clientId;

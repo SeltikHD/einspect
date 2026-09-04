@@ -199,7 +199,7 @@ class InspectionFormBloc
 
       await _repository.saveDraft(entity);
 
-      emit(state.copyWith(submissionStatus: FormSubmissionStatus.success));
+      emit(state.copyWith(submissionStatus: FormSubmissionStatus.successDrafted));
     } catch (e) {
       emit(
         state.copyWith(
@@ -246,10 +246,20 @@ class InspectionFormBloc
 
       await _repository.submitInspection(entity);
 
+      // Verify if record reached server immediately or remained pending in offline queue
+      final savedRecord = await _repository.getInspectionByWorkOrderId(
+        workOrderId: state.workOrderId,
+        userId: state.userId,
+      );
+
+      final isSynced = savedRecord?.status == InspectionStatus.synced;
+
       emit(
         state.copyWith(
-          submissionStatus: FormSubmissionStatus.success,
-          status: InspectionStatus.pending,
+          submissionStatus: isSynced
+              ? FormSubmissionStatus.successSynced
+              : FormSubmissionStatus.successQueuedOffline,
+          status: savedRecord?.status ?? InspectionStatus.pending,
           isReadOnly: true,
         ),
       );

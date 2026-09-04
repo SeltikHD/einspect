@@ -12,6 +12,7 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
   final InspectionsRemoteDataSource _remoteDataSource;
   final NetworkInfo _networkInfo;
 
+  final _syncStatusController = StreamController<SyncBatchStatus>.broadcast();
   StreamSubscription<bool>? _connectivitySubscription;
 
   InspectionsRepositoryImpl({
@@ -134,6 +135,9 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
     );
     return model?.toEntity();
   }
+
+  @override
+  Stream<SyncBatchStatus> get syncStatusStream => _syncStatusController.stream;
 
   @override
   void startAutoSync(String userId) {

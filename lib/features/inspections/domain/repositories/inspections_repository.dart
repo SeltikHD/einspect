@@ -1,5 +1,7 @@
 import '../entities/inspection_entity.dart';
 
+enum SyncBatchStatus { inProgress, success, failure }
+
 abstract interface class InspectionsRepository {
   /// Persists partial technician input without submitting it to the sync pipeline.
   Future<void> saveDraft(InspectionEntity inspection);
@@ -38,5 +40,8 @@ abstract interface class InspectionsRepository {
   void startAutoSync(String userId);
 
   /// Cancels background network listener on technician logout
-  void stopAutoSync();
+void stopAutoSync();
+
+  /// Broadcasts sync progress notifications across the application
+  Stream<SyncBatchStatus> get syncStatusStream;
 }
