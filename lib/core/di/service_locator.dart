@@ -10,6 +10,7 @@ import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/work_orders/data/datasources/work_orders_remote_data_source.dart';
 import '../../features/work_orders/data/repositories/work_orders_repository_impl.dart';
 import '../../features/work_orders/domain/repositories/work_orders_repository.dart';
+import '../../features/work_orders/presentation/bloc/work_orders_bloc.dart';
 import '../database/db_helper.dart';
 import '../database/tables/database_table.dart';
 import '../database/tables/inspections_table.dart';
@@ -66,5 +67,9 @@ Future<void> setupServiceLocator() async {
   // BLoC
   sl.registerFactory<AuthBloc>(
     () => AuthBloc(authRepository: sl<AuthRepository>()),
+  );
+
+  sl.registerFactory<WorkOrdersBloc>(
+    () => WorkOrdersBloc(repository: sl<WorkOrdersRepository>()),
   );
 }
