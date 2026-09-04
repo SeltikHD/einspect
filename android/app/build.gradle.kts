@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.orbytis_challenge"
+    namespace = "br.com.orbytis.einspect"
     // flutter.compileSdkVersion defaults to 36, but flutter_secure_storage requires SDK 37+
     compileSdk = 37
     ndkVersion = flutter.ndkVersion
@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.orbytis_challenge"
+        applicationId = "br.com.orbytis.einspect"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
