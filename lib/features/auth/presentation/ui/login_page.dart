@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Orbytis Inspect',
+                    'eInspect',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).colorScheme.secondary,
