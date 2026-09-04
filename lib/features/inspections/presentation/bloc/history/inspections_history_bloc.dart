@@ -1,0 +1,91 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../domain/entities/inspection_entity.dart';
+import '../../../domain/repositories/inspections_repository.dart';
+import 'inspections_history_event.dart';
+import 'inspections_history_state.dart';
+
+class InspectionsHistoryBloc
+    extends Bloc<InspectionsHistoryEvent, InspectionsHistoryState> {
+  final InspectionsRepository _repository;
+  String _currentUserId = '';
+  InspectionStatus? _currentFilter;
+
+  InspectionsHistoryBloc({required this._repository})
+    : super(const InspectionsHistoryInitial()) {
+    on<InspectionsHistoryFetchRequested>(_onFetchRequested);
+    on<InspectionRetryRequested>(_onRetryRequested);
+    on<InspectionsManualSyncRequested>(_onManualSyncRequested);
+  }
+
+  Future<void> _onFetchRequested(
+    InspectionsHistoryFetchRequested event,
+    Emitter<InspectionsHistoryState> emit,
+  ) async {
+    _currentUserId = event.userId;
+    _currentFilter = event.statusFilter;
+    emit(const InspectionsHistoryLoading());
+
+    try {
+      final list = await _repository.getInspections(
+        userId: _currentUserId,
+        statusFilter: _currentFilter,
+      );
+      emit(
+        InspectionsHistorySuccess(
+          inspections: list,
+          activeFilter: _currentFilter,
+        ),
+      );
+    } catch (e) {
+      emit(InspectionsHistoryError(e.toString().replaceAll('Exception: ', '')));
+    }
+  }
+
+  Future<void> _onRetryRequested(
+    InspectionRetryRequested event,
+    Emitter<InspectionsHistoryState> emit,
+  ) async {
+    try {
+      await _repository.retryInspection(event.clientId);
+      final list = await _repository.getInspections(
+        userId: _currentUserId,
+        statusFilter: _currentFilter,
+      );
+      emit(
+        InspectionsHistorySuccess(
+          inspections: list,
+          activeFilter: _currentFilter,
+        ),
+      );
+    } catch (e) {
+      emit(InspectionsHistoryError(e.toString().replaceAll('Exception: ', '')));
+    }
+  }
+
+  Future<void> _onManualSyncRequested(
+    InspectionsManualSyncRequested event,
+    Emitter<InspectionsHistoryState> emit,
+  ) async {
+    if (state is InspectionsHistorySuccess) {
+      emit((state as InspectionsHistorySuccess).copyWith(isSyncing: true));
+    }
+
+    try {
+      await _repository.syncPendingQueue(userId: _currentUserId);
+      final list = await _repository.getInspections(
+        userId: _currentUserId,
+        statusFilter: _currentFilter,
+      );
+      emit(
+        InspectionsHistorySuccess(
+          inspections: list,
+          activeFilter: _currentFilter,
+          isSyncing: false,
+        ),
+      );
+    } catch (e) {
+      emit(InspectionsHistoryError(e.toString().replaceAll('Exception: ', '')));
+    }
+  }
+}
