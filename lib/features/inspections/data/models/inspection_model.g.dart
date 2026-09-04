@@ -9,6 +9,7 @@ part of 'inspection_model.dart';
 _InspectionModel _$InspectionModelFromJson(Map<String, dynamic> json) =>
     _InspectionModel(
       clientId: json['clientId'] as String,
+      userId: json['userId'] as String,
       workOrderId: json['workOrderId'] as String,
       serverId: json['serverId'] as String?,
       observation: json['observation'] as String?,
@@ -31,6 +32,7 @@ _InspectionModel _$InspectionModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$InspectionModelToJson(_InspectionModel instance) =>
     <String, dynamic>{
       'clientId': instance.clientId,
+      'userId': instance.userId,
       'workOrderId': instance.workOrderId,
       'serverId': instance.serverId,
       'observation': instance.observation,

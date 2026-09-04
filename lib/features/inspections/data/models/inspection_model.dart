@@ -12,6 +12,7 @@ abstract class InspectionModel with _$InspectionModel {
 
   const factory InspectionModel({
     required String clientId,
+    required String userId,
     required String workOrderId,
     String? serverId,
     String? observation,
@@ -34,6 +35,7 @@ abstract class InspectionModel with _$InspectionModel {
   factory InspectionModel.fromDatabase(Map<String, dynamic> map) {
     return InspectionModel(
       clientId: map[InspectionsTable.columnClientId] as String,
+      userId: map[InspectionsTable.columnUserId] as String,
       workOrderId: map[InspectionsTable.columnWorkOrderId] as String,
       serverId: map[InspectionsTable.columnServerId] as String?,
       observation: map[InspectionsTable.columnObservation] as String?,
@@ -62,6 +64,7 @@ abstract class InspectionModel with _$InspectionModel {
   Map<String, dynamic> toDatabase() {
     return {
       InspectionsTable.columnClientId: clientId,
+      InspectionsTable.columnUserId: userId,
       InspectionsTable.columnServerId: serverId,
       InspectionsTable.columnWorkOrderId: workOrderId,
       InspectionsTable.columnObservation: observation,
@@ -81,6 +84,7 @@ abstract class InspectionModel with _$InspectionModel {
   factory InspectionModel.fromEntity(InspectionEntity entity) {
     return InspectionModel(
       clientId: entity.clientId,
+      userId: entity.userId,
       workOrderId: entity.workOrderId,
       serverId: entity.serverId,
       observation: entity.observation,
@@ -100,6 +104,7 @@ abstract class InspectionModel with _$InspectionModel {
   InspectionEntity toEntity() {
     return InspectionEntity(
       clientId: clientId,
+      userId: userId,
       workOrderId: workOrderId,
       serverId: serverId,
       observation: observation,

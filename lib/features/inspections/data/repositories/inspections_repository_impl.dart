@@ -9,10 +9,9 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
   final InspectionsRemoteDataSource _remoteDataSource;
 
   const InspectionsRepositoryImpl({
-    required InspectionsLocalDataSource localDataSource,
-    required InspectionsRemoteDataSource remoteDataSource,
-  }) : _localDataSource = localDataSource,
-       _remoteDataSource = remoteDataSource;
+    required this._localDataSource,
+    required this._remoteDataSource,
+  });
 
   @override
   Future<void> saveDraft(InspectionEntity inspection) async {
@@ -29,6 +28,10 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
 
   @override
   Future<void> submitInspection(InspectionEntity inspection) async {
+    if (inspection.isReadOnly) {
+      throw StateError('Esta inspeção já foi finalizada.');
+    }
+
     if (!inspection.isValidForSubmission) {
       throw ArgumentError(
         'A inspeção deve conter observação válida (mínimo 10 caracteres), evidência fotográfica e GPS.',
@@ -36,7 +39,6 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
     }
 
     final now = DateTime.now();
-    // Transition to pending state locally before attempting network dispatch
     final pendingInspection = inspection.copyWith(
       status: InspectionStatus.pending,
       failureReason: null,
@@ -48,8 +50,7 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
       InspectionModel.fromEntity(pendingInspection),
     );
 
-    // Opportunistically attempt immediate transmission if connectivity is present
-    await syncPendingQueue();
+    await syncPendingQueue(userId: inspection.userId);
   }
 
   @override
@@ -64,19 +65,17 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
     );
 
     await _localDataSource.insertOrUpdate(queued);
-    await syncPendingQueue();
+    await syncPendingQueue(userId: existing.userId);
   }
 
   @override
-  Future<void> syncPendingQueue() async {
-    final queue = await _localDataSource.findSyncQueue();
+  Future<void> syncPendingQueue({String? userId}) async {
+    final queue = await _localDataSource.findSyncQueue(userId: userId);
     if (queue.isEmpty) return;
 
     for (final item in queue) {
       try {
-        // Submitting with pre-existing clientId ensures server-side idempotency across retries
         final response = await _remoteDataSource.uploadInspection(item);
-
         final serverId = response['id'] as String?;
         final syncedAtString = response['syncedAt'] as String?;
         final remoteSyncedAt = syncedAtString != null
@@ -93,7 +92,6 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
 
         await _localDataSource.insertOrUpdate(syncedItem);
       } catch (e) {
-        // Isolate synchronization failure to this specific inspection; preserve local state for next cycle
         final failedItem = item.copyWith(
           status: 'failed',
           failureReason: e.toString().replaceAll('Exception: ', ''),
@@ -107,17 +105,25 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
 
   @override
   Future<List<InspectionEntity>> getInspections({
+    required String userId,
     InspectionStatus? statusFilter,
   }) async {
-    final models = await _localDataSource.findAll(status: statusFilter?.name);
+    final models = await _localDataSource.findAll(
+      userId: userId,
+      status: statusFilter?.name,
+    );
     return models.map((m) => m.toEntity()).toList();
   }
 
   @override
-  Future<InspectionEntity?> getInspectionByWorkOrderId(
-    String workOrderId,
-  ) async {
-    final model = await _localDataSource.findByWorkOrderId(workOrderId);
+  Future<InspectionEntity?> getInspectionByWorkOrderId({
+    required String workOrderId,
+    required String userId,
+  }) async {
+    final model = await _localDataSource.findByWorkOrderId(
+      workOrderId: workOrderId,
+      userId: userId,
+    );
     return model?.toEntity();
   }
 }

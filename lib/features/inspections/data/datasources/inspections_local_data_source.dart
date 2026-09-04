@@ -7,11 +7,17 @@ import '../models/inspection_model.dart';
 abstract interface class InspectionsLocalDataSource {
   Future<void> insertOrUpdate(InspectionModel inspection);
   Future<InspectionModel?> findByClientId(String clientId);
-  Future<InspectionModel?> findByWorkOrderId(String workOrderId);
-  Future<List<InspectionModel>> findAll({String? status});
+  Future<InspectionModel?> findByWorkOrderId({
+    required String workOrderId,
+    required String userId,
+  });
+  Future<List<InspectionModel>> findAll({
+    required String userId,
+    String? status,
+  });
 
   /// Pulls all unacknowledged inspections needing background remote transmission.
-  Future<List<InspectionModel>> findSyncQueue();
+  Future<List<InspectionModel>> findSyncQueue({String? userId});
 }
 
 final class InspectionsLocalDataSourceImpl
@@ -45,44 +51,64 @@ final class InspectionsLocalDataSourceImpl
   }
 
   @override
-  Future<InspectionModel?> findByWorkOrderId(String workOrderId) async {
+  Future<InspectionModel?> findByWorkOrderId({
+    required String workOrderId,
+    required String userId,
+  }) async {
     final db = await _dbHelper.database;
     final results = await db.query(
       InspectionsTable().tableName,
-      where: '${InspectionsTable.columnWorkOrderId} = ?',
-      whereArgs: [workOrderId],
+      where:
+          '${InspectionsTable.columnWorkOrderId} = ? AND ${InspectionsTable.columnUserId} = ?',
+      whereArgs: [workOrderId, userId],
       limit: 1,
     );
-
     if (results.isEmpty) return null;
     return InspectionModel.fromDatabase(results.first);
   }
 
   @override
-  Future<List<InspectionModel>> findAll({String? status}) async {
+  Future<List<InspectionModel>> findAll({
+    required String userId,
+    String? status,
+  }) async {
     final db = await _dbHelper.database;
+    final whereClauses = ['${InspectionsTable.columnUserId} = ?'];
+    final whereArgs = <dynamic>[userId];
+
+    if (status != null) {
+      whereClauses.add('${InspectionsTable.columnStatus} = ?');
+      whereArgs.add(status);
+    }
+
     final results = await db.query(
       InspectionsTable().tableName,
-      where: status != null ? '${InspectionsTable.columnStatus} = ?' : null,
-      whereArgs: status != null ? [status] : null,
+      where: whereClauses.join(' AND '),
+      whereArgs: whereArgs,
       orderBy: '${InspectionsTable.columnCreatedAt} DESC',
     );
-
     return results.map(InspectionModel.fromDatabase).toList();
   }
 
   @override
-  Future<List<InspectionModel>> findSyncQueue() async {
+  Future<List<InspectionModel>> findSyncQueue({String? userId}) async {
     final db = await _dbHelper.database;
-    // Dispatches pending items as well as previously failed attempts for automated retry
+    final whereClauses = [
+      '(${InspectionsTable.columnStatus} = ? OR ${InspectionsTable.columnStatus} = ?)',
+    ];
+    final whereArgs = <dynamic>['pending', 'failed'];
+
+    if (userId != null) {
+      whereClauses.add('${InspectionsTable.columnUserId} = ?');
+      whereArgs.add(userId);
+    }
+
     final results = await db.query(
       InspectionsTable().tableName,
-      where:
-          '${InspectionsTable.columnStatus} = ? OR ${InspectionsTable.columnStatus} = ?',
-      whereArgs: ['pending', 'failed'],
+      where: whereClauses.join(' AND '),
+      whereArgs: whereArgs,
       orderBy: '${InspectionsTable.columnCreatedAt} ASC',
     );
-
     return results.map(InspectionModel.fromDatabase).toList();
   }
 }
