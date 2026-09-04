@@ -14,6 +14,7 @@ final class InspectionsTable extends DatabaseTable {
   // Remote ID assigned by the backend upon successful synchronization
   static const String columnServerId = 'server_id';
 
+  static const String columnUserId = 'user_id';
   static const String columnWorkOrderId = 'work_order_id';
   static const String columnObservation = 'observation';
   static const String columnCondition = 'condition';
@@ -45,6 +46,7 @@ final class InspectionsTable extends DatabaseTable {
       -- Primary key relies on client-generated UUID to prevent duplicated submissions
       $columnClientId TEXT PRIMARY KEY,
       $columnServerId TEXT,
+      $columnUserId TEXT NOT NULL,
       $columnWorkOrderId TEXT NOT NULL,
       -- Field data columns remain nullable to allow saving incomplete drafts
       $columnObservation TEXT,
