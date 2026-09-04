@@ -50,7 +50,7 @@ class EInspectApp extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: _brandPrimary,
               foregroundColor: Colors.white,
-              minimumSize: const Size.fromHeight(48),
+              minimumSize: const Size(0, 48),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
