@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import '../../../../core/network/network_info.dart';
 import '../../domain/entities/inspection_entity.dart';
 import '../../domain/repositories/inspections_repository.dart';
 import '../datasources/inspections_local_data_source.dart';
@@ -7,10 +10,14 @@ import '../models/inspection_model.dart';
 final class InspectionsRepositoryImpl implements InspectionsRepository {
   final InspectionsLocalDataSource _localDataSource;
   final InspectionsRemoteDataSource _remoteDataSource;
+  final NetworkInfo _networkInfo;
 
-  const InspectionsRepositoryImpl({
+  StreamSubscription<bool>? _connectivitySubscription;
+
+  InspectionsRepositoryImpl({
     required this._localDataSource,
     required this._remoteDataSource,
+    required this._networkInfo,
   });
 
   @override
@@ -126,5 +133,41 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
       userId: userId,
     );
     return model?.toEntity();
+  }
+
+  @override
+  void startAutoSync(String userId) {
+    _connectivitySubscription?.cancel();
+
+    // Debounces redundant connection switches and synchronizes immediately on reconnect
+    _connectivitySubscription = _networkInfo.onConnectivityChanged
+        .distinct()
+        .listen((hasConnection) {
+          if (hasConnection) {
+            syncPendingQueue(userId: userId);
+          }
+        });
+  }
+
+  @override
+  void stopAutoSync() {
+    _connectivitySubscription?.cancel();
+    _connectivitySubscription = null;
+  }
+
+  @override
+  Future<String> persistPhoto({
+    required String tempPath,
+    required String clientId,
+  }) {
+    return _localDataSource.savePermanentPhoto(
+      sourcePath: tempPath,
+      clientId: clientId,
+    );
+  }
+
+  @override
+  Future<void> deletePhoto(String filePath) {
+    return _localDataSource.deletePermanentPhoto(filePath);
   }
 }

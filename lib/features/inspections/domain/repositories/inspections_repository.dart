@@ -24,4 +24,19 @@ abstract interface class InspectionsRepository {
     required String workOrderId,
     required String userId,
   });
+
+  /// Copies an image file into safe app-owned storage
+  Future<String> persistPhoto({
+    required String tempPath,
+    required String clientId,
+  });
+
+  /// Cleans up localized image from filesystem
+  Future<void> deletePhoto(String filePath);
+
+  /// Starts monitoring network recovery to opportunistically flush queue for the active technician
+  void startAutoSync(String userId);
+
+  /// Cancels background network listener on technician logout
+  void stopAutoSync();
 }

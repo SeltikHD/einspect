@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/database/db_helper.dart';
@@ -15,6 +18,15 @@ abstract interface class InspectionsLocalDataSource {
     required String userId,
     String? status,
   });
+
+  /// Moves temporary camera/gallery evidence to app documents directory to survive OS cache cleaning
+  Future<String> savePermanentPhoto({
+    required String sourcePath,
+    required String clientId,
+  });
+
+  /// Deletes stored evidence file from disk when technician removes it from draft
+  Future<void> deletePermanentPhoto(String filePath);
 
   /// Pulls all unacknowledged inspections needing background remote transmission.
   Future<List<InspectionModel>> findSyncQueue({String? userId});
@@ -88,6 +100,37 @@ final class InspectionsLocalDataSourceImpl
       orderBy: '${InspectionsTable.columnCreatedAt} DESC',
     );
     return results.map(InspectionModel.fromDatabase).toList();
+  }
+
+  @override
+  Future<String> savePermanentPhoto({
+    required String sourcePath,
+    required String clientId,
+  }) async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final inspectionsDir = Directory('${appDir.path}/inspections');
+
+    if (!await inspectionsDir.exists()) {
+      await inspectionsDir.create(recursive: true);
+    }
+
+    final extension = sourcePath.contains('.')
+        ? sourcePath.split('.').last
+        : 'jpg';
+    final targetFileName =
+        '${clientId}_${DateTime.now().millisecondsSinceEpoch}.$extension';
+    final targetPath = '${inspectionsDir.path}/$targetFileName';
+
+    final savedFile = await File(sourcePath).copy(targetPath);
+    return savedFile.path;
+  }
+
+  @override
+  Future<void> deletePermanentPhoto(String filePath) async {
+    final file = File(filePath);
+    if (await file.exists()) {
+      await file.delete();
+    }
   }
 
   @override

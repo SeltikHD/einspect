@@ -6,6 +6,7 @@ import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
 import 'features/auth/presentation/ui/login_page.dart';
+import 'features/inspections/domain/repositories/inspections_repository.dart';
 import 'features/work_orders/presentation/bloc/work_orders_bloc.dart';
 import 'features/work_orders/presentation/bloc/work_orders_event.dart';
 import 'features/work_orders/presentation/ui/work_orders_page.dart';
@@ -86,7 +87,15 @@ class AuthSessionGatekeeper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        // Triggers automatic synchronization pipeline when technician logs in
+        if (state is Authenticated) {
+          sl<InspectionsRepository>().startAutoSync(state.user.id);
+        } else if (state is Unauthenticated) {
+          sl<InspectionsRepository>().stopAutoSync();
+        }
+      },
       builder: (context, state) {
         if (state is Authenticated) {
           return BlocProvider<WorkOrdersBloc>(

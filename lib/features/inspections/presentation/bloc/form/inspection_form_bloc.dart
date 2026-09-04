@@ -78,19 +78,31 @@ class InspectionFormBloc
     emit(state.copyWith(condition: event.condition));
   }
 
-  void _onPhotoSelected(
+  Future<void> _onPhotoSelected(
     InspectionPhotoSelected event,
     Emitter<InspectionFormState> emit,
-  ) {
+  ) async {
     if (state.isReadOnly) return;
-    emit(state.copyWith(photoPath: event.photoPath));
+
+    // Immediately copy temp file to documents sandbox before OS cache eviction occurs
+    final permanentPath = await _repository.persistPhoto(
+      tempPath: event.photoPath,
+      clientId: state.clientId,
+    );
+
+    emit(state.copyWith(photoPath: permanentPath));
   }
 
-  void _onPhotoRemoved(
+  Future<void> _onPhotoRemoved(
     InspectionPhotoRemoved event,
     Emitter<InspectionFormState> emit,
-  ) {
+  ) async {
     if (state.isReadOnly) return;
+
+    if (state.photoPath != null && state.photoPath!.isNotEmpty) {
+      await _repository.deletePhoto(state.photoPath!);
+    }
+
     emit(state.copyWith(clearPhoto: true));
   }
 

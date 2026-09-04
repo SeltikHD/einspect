@@ -21,6 +21,7 @@ import '../database/db_helper.dart';
 import '../database/tables/database_table.dart';
 import '../database/tables/inspections_table.dart';
 import '../network/api_client.dart';
+import '../network/network_info.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -40,6 +41,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<ApiClient>(
     () => ApiClient(storage: sl<FlutterSecureStorage>()),
   );
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
 
   sl.registerLazySingleton<Dio>(() => sl<ApiClient>().client);
 
@@ -82,6 +84,7 @@ Future<void> setupServiceLocator() async {
     () => InspectionsRepositoryImpl(
       remoteDataSource: sl<InspectionsRemoteDataSource>(),
       localDataSource: sl<InspectionsLocalDataSource>(),
+      networkInfo: sl<NetworkInfo>(),
     ),
   );
 
