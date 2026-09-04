@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../domain/entities/user_entity.dart';
 import '../models/login_response_model.dart';
 
 abstract interface class AuthRemoteDataSource {
@@ -7,12 +8,15 @@ abstract interface class AuthRemoteDataSource {
     required String email,
     required String password,
   });
+
+  // Consumes protected GET /auth/me to fetch authenticated technician profile
+  Future<UserEntity> getCurrentUser();
 }
 
-class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Dio _dio;
 
-  AuthRemoteDataSourceImpl({required this._dio});
+  const AuthRemoteDataSourceImpl({required this._dio});
 
   @override
   Future<LoginResponseModel> login({
@@ -26,10 +30,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.data == null) {
-        throw DioException(
-          requestOptions: response.requestOptions,
-          error: 'Empty response from server',
-        );
+        throw Exception('Empty response received from server');
       }
 
       return LoginResponseModel.fromJson(response.data!);
@@ -39,6 +40,30 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw Exception(message ?? 'Credenciais inválidas');
       }
       throw Exception('Network communication failure');
+    }
+  }
+
+  @override
+  Future<UserEntity> getCurrentUser() async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>('/auth/me');
+
+      if (response.data == null) {
+        throw Exception('User profile not found');
+      }
+
+      final data = response.data!;
+      return UserEntity(
+        id: data['id'] as String,
+        name: data['name'] as String,
+        email: data['email'] as String,
+        role: data['role'] as String,
+      );
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        throw Exception('Session expired or unauthorized');
+      }
+      throw Exception('Failed to fetch user profile');
     }
   }
 }

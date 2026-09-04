@@ -1,4 +1,5 @@
 import '../../domain/entities/auth_session_entity.dart';
+import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_data_source.dart';
 import '../datasources/auth_remote_data_source.dart';
@@ -22,8 +23,15 @@ final class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
 
+    // Securely cache JWT for downstream interceptors
     await _localDataSource.saveToken(session.accessToken);
     return session;
+  }
+
+  @override
+  Future<UserEntity> getCurrentUser() async {
+    // Interceptor automatically injects the stored Bearer token into headers
+    return _remoteDataSource.getCurrentUser();
   }
 
   @override
