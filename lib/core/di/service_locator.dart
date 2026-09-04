@@ -7,6 +7,12 @@ import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
+import '../../features/inspections/data/datasources/inspections_local_data_source.dart';
+import '../../features/inspections/data/datasources/inspections_remote_data_source.dart';
+import '../../features/inspections/data/repositories/inspections_repository_impl.dart';
+import '../../features/inspections/domain/repositories/inspections_repository.dart';
+import '../../features/inspections/presentation/bloc/form/inspection_form_bloc.dart';
+import '../../features/inspections/presentation/bloc/history/inspections_history_bloc.dart';
 import '../../features/work_orders/data/datasources/work_orders_remote_data_source.dart';
 import '../../features/work_orders/data/repositories/work_orders_repository_impl.dart';
 import '../../features/work_orders/domain/repositories/work_orders_repository.dart';
@@ -42,12 +48,20 @@ Future<void> setupServiceLocator() async {
     () => AuthRemoteDataSourceImpl(dio: sl<Dio>()),
   );
 
+  sl.registerLazySingleton<AuthLocalDataSource>(
+    () => AuthLocalDataSourceImpl(storage: sl<FlutterSecureStorage>()),
+  );
+
   sl.registerLazySingleton<WorkOrdersRemoteDataSource>(
     () => WorkOrdersRemoteDataSourceImpl(dio: sl<Dio>()),
   );
 
-  sl.registerLazySingleton<AuthLocalDataSource>(
-    () => AuthLocalDataSourceImpl(storage: sl<FlutterSecureStorage>()),
+  sl.registerLazySingleton<InspectionsRemoteDataSource>(
+    () => InspectionsRemoteDataSourceImpl(dio: sl<Dio>()),
+  );
+
+  sl.registerLazySingleton<InspectionsLocalDataSource>(
+    () => InspectionsLocalDataSourceImpl(dbHelper: sl<DbHelper>()),
   );
 
   // Repositories
@@ -64,6 +78,13 @@ Future<void> setupServiceLocator() async {
     ),
   );
 
+  sl.registerLazySingleton<InspectionsRepository>(
+    () => InspectionsRepositoryImpl(
+      remoteDataSource: sl<InspectionsRemoteDataSource>(),
+      localDataSource: sl<InspectionsLocalDataSource>(),
+    ),
+  );
+
   // BLoC
   sl.registerFactory<AuthBloc>(
     () => AuthBloc(authRepository: sl<AuthRepository>()),
@@ -71,5 +92,13 @@ Future<void> setupServiceLocator() async {
 
   sl.registerFactory<WorkOrdersBloc>(
     () => WorkOrdersBloc(repository: sl<WorkOrdersRepository>()),
+  );
+
+  sl.registerFactory<InspectionFormBloc>(
+    () => InspectionFormBloc(repository: sl<InspectionsRepository>()),
+  );
+
+  sl.registerFactory<InspectionsHistoryBloc>(
+    () => InspectionsHistoryBloc(repository: sl<InspectionsRepository>()),
   );
 }
