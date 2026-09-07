@@ -1,6 +1,7 @@
 import 'package:einspect/core/di/service_locator.dart';
 import 'package:einspect/core/network/network_status_cubit.dart';
 import 'package:einspect/core/routing/app_router.dart';
+import 'package:einspect/core/theme/app_theme.dart';
 import 'package:einspect/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:einspect/features/auth/presentation/bloc/auth_event.dart';
 import 'package:einspect/features/auth/presentation/bloc/auth_state.dart';
@@ -23,10 +24,6 @@ class EInspectApp extends StatelessWidget {
 
   const EInspectApp({super.key, required this.dependencies});
 
-  static const Color _brandPrimary = Color(0xFF0072CE);
-  static const Color _brandNavy = Color(0xFF0B1E36);
-  static const Color _surfaceLight = Color(0xFFF4F7FA);
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -46,48 +43,7 @@ class EInspectApp extends StatelessWidget {
         title: 'eInspect',
         debugShowCheckedModeBanner: false,
         onGenerateRoute: AppRouter.onGenerateRoute,
-        theme: ThemeData(
-          useMaterial3: true,
-          scaffoldBackgroundColor: _surfaceLight,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: _brandPrimary,
-            primary: _brandPrimary,
-            secondary: _brandNavy,
-            surface: Colors.white,
-          ),
-          appBarTheme: const AppBarTheme(
-            backgroundColor: _brandNavy,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            centerTitle: false,
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _brandPrimary,
-              foregroundColor: Colors.white,
-              minimumSize: const Size(0, 48),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFCFD8DC)),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFCFD8DC)),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              borderSide: BorderSide(color: _brandPrimary, width: 2),
-            ),
-          ),
-        ),
+        theme: AppTheme.light,
         home: AuthSessionGatekeeper(
           inspectionsRepository: dependencies.inspectionsRepository,
         ),

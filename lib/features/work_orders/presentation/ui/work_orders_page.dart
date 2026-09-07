@@ -87,7 +87,7 @@ class WorkOrdersPage extends StatelessWidget {
             onPressed: () async {
               await Navigator.of(context)
                   .pushNamed(AppRoutes.inspectionsHistory, arguments: userId);
-              if (context.mounted) _refresh(context);
+              if (context.mounted) unawaited(_refresh(context));
             },
           ),
           IconButton(
@@ -240,7 +240,7 @@ class WorkOrdersPage extends StatelessWidget {
                               AppRoutes.inspectionForm,
                               arguments: (workOrder: workOrder, userId: userId),
                             );
-                            if (context.mounted) _refresh(context);
+                            if (context.mounted) unawaited(_refresh(context));
                           },
                         );
                       },

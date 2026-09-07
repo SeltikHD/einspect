@@ -1,3 +1,4 @@
+import 'package:einspect/core/theme/app_colors.dart';
 import 'package:einspect/core/widgets/app_status_badge.dart';
 import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
 import 'package:einspect/features/work_orders/domain/entities/work_order_entity.dart';
@@ -33,15 +34,15 @@ class WorkOrderCard extends StatelessWidget {
   Color _getPriorityColor(String priority) {
     switch (priority.toLowerCase()) {
       case 'urgent':
-        return const Color(0xFFB71C1C);
+        return AppColors.danger;
       case 'high':
-        return const Color(0xFFD32F2F);
+        return AppColors.danger;
       case 'medium':
-        return const Color(0xFFE65100);
+        return AppColors.warning;
       case 'low':
-        return const Color(0xFF388E3C);
+        return AppColors.success;
       default:
-        return Colors.blueGrey;
+        return AppColors.neutral;
     }
   }
 
@@ -62,14 +63,14 @@ class WorkOrderCard extends StatelessWidget {
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'open':
-        return const Color(0xFF0072CE);
+        return AppColors.primary;
       case 'in_progress':
-        return const Color(0xFFF57C00);
+        return AppColors.warning;
       case 'done':
       case 'completed':
-        return const Color(0xFF2E7D32);
+        return AppColors.success;
       default:
-        return Colors.grey.shade700;
+        return AppColors.neutral;
     }
   }
 
@@ -77,13 +78,13 @@ class WorkOrderCard extends StatelessWidget {
     if (status == null) return null;
     switch (status) {
       case InspectionStatus.draft:
-        return ('RASCUNHO LOCAL', Colors.blueGrey);
+        return ('RASCUNHO LOCAL', AppColors.neutral);
       case InspectionStatus.pending:
-        return ('EM FILA (PENDENTE)', const Color(0xFFE65100));
+        return ('EM FILA (PENDENTE)', AppColors.warning);
       case InspectionStatus.synced:
-        return ('INSPEÇÃO SINCRONIZADA', const Color(0xFF2E7D32));
+        return ('INSPEÇÃO SINCRONIZADA', AppColors.success);
       case InspectionStatus.failed:
-        return ('FALHA NO SYNC', const Color(0xFFD32F2F));
+        return ('FALHA NO SYNC', AppColors.danger);
     }
   }
 

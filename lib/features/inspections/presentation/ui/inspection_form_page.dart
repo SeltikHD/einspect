@@ -1,5 +1,10 @@
 import 'dart:io';
 
+import 'package:einspect/core/theme/app_colors.dart';
+import 'package:einspect/core/widgets/app_button.dart';
+import 'package:einspect/core/widgets/app_card.dart';
+import 'package:einspect/core/widgets/geofence_warning.dart';
+import 'package:einspect/core/widgets/read_only_banner.dart';
 import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
 import 'package:einspect/features/inspections/presentation/bloc/form/inspection_form_bloc.dart';
 import 'package:einspect/features/inspections/presentation/bloc/form/inspection_form_event.dart';
@@ -104,79 +109,37 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
               children: [
                 // Banner Read-Only quando a inspeção já foi finalizada
                 if (state.isReadOnly) ...[
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: state.status == InspectionStatus.synced
-                          ? Colors.green.shade50
-                          : Colors.orange.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: state.status == InspectionStatus.synced
-                            ? Colors.green.shade300
-                            : Colors.orange.shade300,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          state.status == InspectionStatus.synced
-                              ? Icons.check_circle_outline
-                              : Icons.schedule,
-                          color: state.status == InspectionStatus.synced
-                              ? Colors.green.shade800
-                              : Colors.orange.shade800,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            state.status == InspectionStatus.synced
-                                ? 'Inspeção sincronizada com sucesso.'
-                                : 'Inspeção concluída e aguardando envio na fila de sincronização.',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: state.status == InspectionStatus.synced
-                                  ? Colors.green.shade900
-                                  : Colors.orange.shade900,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  ReadOnlyBanner(
+                    message: state.status == InspectionStatus.synced
+                        ? 'Inspeção sincronizada com sucesso.'
+                        : 'Inspeção concluída e aguardando envio na fila de sincronização.',
+                    isSynced: state.status == InspectionStatus.synced,
                   ),
+                  const SizedBox(height: 16),
                 ],
 
                 // Card da OS
-                Card(
-                  elevation: 0,
-                  color: Colors.blue.shade50,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(color: Colors.blue.shade200),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.workOrder.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
+                AppCard(
+                  color: AppColors.primary.withValues(alpha: .08),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.workOrder.title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          widget.workOrder.address,
-                          style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.black87,
-                          ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        widget.workOrder.address,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.black87,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -304,33 +267,9 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                 const SizedBox(height: 8),
 
                 if (state.isOutOfGeofence && !state.isReadOnly) ...[
-                  Container(
-                    margin: const EdgeInsets.only(top: 8, bottom: 8),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.amber.shade400),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.warning_amber_rounded,
-                          color: Colors.amber.shade900,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'Atenção: Você está a ${state.geofenceDistanceMeters!.toStringAsFixed(0)}m do ponto programado da OS (limite recomendado: 200m).',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.amber.shade900,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  GeofenceWarning(
+                    message:
+                        'Atenção: você está a ${state.geofenceDistanceMeters!.toStringAsFixed(0)}m do ponto programado da OS (limite recomendado: 200m).',
                   ),
                 ],
 
@@ -406,10 +345,9 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                   Row(
                     children: [
                       Expanded(
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            minimumSize: const Size(0, 48),
-                          ),
+                        child: AppButton(
+                          outlined: true,
+                          label: 'Salvar Rascunho',
                           onPressed:
                               state.submissionStatus ==
                                   FormSubmissionStatus.submitting
@@ -417,15 +355,15 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                               : () => context.read<InspectionFormBloc>().add(
                                   const InspectionDraftSaveSubmitted(),
                                 ),
-                          child: const Text('Salvar Rascunho'),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(0, 48),
-                          ),
+                        child: AppButton(
+                          label: 'Concluir Inspeção',
+                          isLoading:
+                              state.submissionStatus ==
+                              FormSubmissionStatus.submitting,
                           onPressed:
                               state.submissionStatus ==
                                   FormSubmissionStatus.submitting
@@ -433,18 +371,6 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                               : () => context.read<InspectionFormBloc>().add(
                                   const InspectionCompletionSubmitted(),
                                 ),
-                          child:
-                              state.submissionStatus ==
-                                  FormSubmissionStatus.submitting
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Text('Concluir Inspeção'),
                         ),
                       ),
                     ],

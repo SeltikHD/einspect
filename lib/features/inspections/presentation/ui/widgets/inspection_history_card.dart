@@ -1,3 +1,6 @@
+import 'package:einspect/core/theme/app_colors.dart';
+import 'package:einspect/core/widgets/app_card.dart';
+import 'package:einspect/core/widgets/app_status_badge.dart';
 import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
 import 'package:flutter/material.dart';
 
@@ -14,13 +17,13 @@ class InspectionHistoryCard extends StatelessWidget {
   (String, Color) _statusDetails(InspectionStatus status) {
     switch (status) {
       case InspectionStatus.draft:
-        return ('RASCUNHO', Colors.blueGrey);
+        return ('RASCUNHO', AppColors.neutral);
       case InspectionStatus.pending:
-        return ('PENDENTE', const Color(0xFFF57C00));
+        return ('PENDENTE', AppColors.warning);
       case InspectionStatus.synced:
-        return ('SINCRONIZADA', const Color(0xFF2E7D32));
+        return ('SINCRONIZADA', AppColors.success);
       case InspectionStatus.failed:
-        return ('FALHA', const Color(0xFFD32F2F));
+        return ('FALHA', AppColors.danger);
     }
   }
 
@@ -28,15 +31,9 @@ class InspectionHistoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final (label, color) = _statusDetails(inspection.status);
 
-    return Card(
-      elevation: 0,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: const BorderSide(color: Color(0xFFE2E8F0)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      child: AppCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -50,25 +47,7 @@ class InspectionHistoryCard extends StatelessWidget {
                     fontSize: 13,
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: color.withValues(alpha: 0.4)),
-                  ),
-                  child: Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
-                  ),
-                ),
+                AppStatusBadge(label: label, color: color),
               ],
             ),
             const SizedBox(height: 8),
@@ -84,7 +63,7 @@ class InspectionHistoryCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.red.shade50,
+                  color: AppColors.danger.withValues(alpha: .10),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Row(
@@ -92,15 +71,15 @@ class InspectionHistoryCard extends StatelessWidget {
                     const Icon(
                       Icons.error_outline,
                       size: 16,
-                      color: Colors.red,
+                      color: AppColors.danger,
                     ),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         inspection.failureReason!,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
-                          color: Colors.red.shade900,
+                          color: AppColors.danger,
                         ),
                       ),
                     ),
