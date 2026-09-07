@@ -5,18 +5,25 @@ class AppFilterChip extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onSelected;
+  final IconData? icon;
 
   const AppFilterChip({
     super.key,
     required this.label,
     required this.isSelected,
     required this.onSelected,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
+    final foregroundColor = isSelected ? Colors.white : AppColors.neutral;
+
     return ChoiceChip(
       label: Text(label),
+      avatar: icon == null
+          ? null
+          : Icon(icon, size: 18, color: foregroundColor),
       selected: isSelected,
       onSelected: (_) => onSelected(),
       selectedColor: AppColors.primary,
@@ -28,7 +35,7 @@ class AppFilterChip extends StatelessWidget {
       labelStyle: TextStyle(
         fontSize: 13,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        color: isSelected ? Colors.white : AppColors.text,
+        color: foregroundColor,
       ),
     );
   }

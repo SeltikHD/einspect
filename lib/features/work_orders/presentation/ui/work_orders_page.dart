@@ -48,38 +48,42 @@ class WorkOrdersPage extends StatelessWidget {
                 WorkOrdersFilterChanged(sort: sort),
               );
             },
-            itemBuilder: (context) => const [
-              PopupMenuItem(
-                value: WorkOrderSort.urgent,
-                child: Row(
-                  children: [
-                    Icon(Icons.priority_high, color: Colors.red, size: 18),
-                    SizedBox(width: 8),
-                    Text('Mais urgentes'),
-                  ],
+            itemBuilder: (context) {
+              final onSurface = Theme.of(context).colorScheme.onSurface;
+
+              return [
+                const PopupMenuItem(
+                  value: WorkOrderSort.urgent,
+                  child: Row(
+                    children: [
+                      Icon(Icons.priority_high, color: Colors.red, size: 18),
+                      SizedBox(width: 8),
+                      Text('Mais urgentes'),
+                    ],
+                  ),
                 ),
-              ),
-              PopupMenuItem(
-                value: WorkOrderSort.newest,
-                child: Row(
-                  children: [
-                    Icon(Icons.access_time, size: 18),
-                    SizedBox(width: 8),
-                    Text('Mais recentes'),
-                  ],
+                PopupMenuItem(
+                  value: WorkOrderSort.newest,
+                  child: Row(
+                    children: [
+                      Icon(Icons.access_time, color: onSurface, size: 18),
+                      const SizedBox(width: 8),
+                      const Text('Mais recentes'),
+                    ],
+                  ),
                 ),
-              ),
-              PopupMenuItem(
-                value: WorkOrderSort.scheduled,
-                child: Row(
-                  children: [
-                    Icon(Icons.event, size: 18),
-                    SizedBox(width: 8),
-                    Text('Data agendada'),
-                  ],
+                PopupMenuItem(
+                  value: WorkOrderSort.scheduled,
+                  child: Row(
+                    children: [
+                      Icon(Icons.event, color: onSurface, size: 18),
+                      const SizedBox(width: 8),
+                      const Text('Data agendada'),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ];
+            },
           ),
           IconButton(
             tooltip: 'Histórico de Inspeções',
@@ -202,19 +206,22 @@ class WorkOrdersPage extends StatelessWidget {
                     onRefresh: () => _refresh(context),
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      children: const [
-                        SizedBox(height: 140),
-                        Icon(
+                      children: [
+                        const SizedBox(height: 140),
+                        const Icon(
                           Icons.filter_list_off,
                           size: 64,
                           color: Colors.grey,
                         ),
-                        SizedBox(height: 12),
-                        Center(
+                        const SizedBox(height: 12),
+                        const Center(
                           child: Text(
                             'Nenhuma ordem de serviço neste filtro.',
                             style: TextStyle(color: Colors.grey, fontSize: 16),
                           ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.paddingOf(context).bottom + 16,
                         ),
                       ],
                     ),
@@ -225,7 +232,10 @@ class WorkOrdersPage extends StatelessWidget {
                   return RefreshIndicator(
                     onRefresh: () => _refresh(context),
                     child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: EdgeInsets.only(
+                        top: 8,
+                        bottom: MediaQuery.paddingOf(context).bottom + 16,
+                      ),
                       itemCount: state.workOrders.length,
                       itemBuilder: (context, index) {
                         final workOrder = state.workOrders[index];

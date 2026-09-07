@@ -181,7 +181,10 @@ class InspectionsHistoryPage extends StatelessWidget {
                   }
 
                   return ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: EdgeInsets.only(
+                      top: 8,
+                      bottom: MediaQuery.paddingOf(context).bottom + 16,
+                    ),
                     itemCount: state.inspections.length,
                     itemBuilder: (context, index) {
                       final item = state.inspections[index];

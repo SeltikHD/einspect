@@ -103,7 +103,12 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
         return Scaffold(
           appBar: AppBar(title: Text('Inspeção: ${widget.workOrder.code}')),
           body: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.only(
+              left: 16,
+              top: 16,
+              right: 16,
+              bottom: MediaQuery.paddingOf(context).bottom + 16,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
