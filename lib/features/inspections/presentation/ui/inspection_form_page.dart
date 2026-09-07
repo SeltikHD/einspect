@@ -25,6 +25,7 @@ class InspectionFormPage extends StatefulWidget {
 class _InspectionFormPageState extends State<InspectionFormPage> {
   final _observationController = TextEditingController();
   final _picker = ImagePicker();
+  bool _isPickingImage = false;
 
   @override
   void dispose() {
@@ -33,15 +34,24 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final file = await _picker.pickImage(
-      source: source,
-      maxWidth: 1280,
-      imageQuality: 85,
-    );
-    if (file != null && mounted) {
-      context.read<InspectionFormBloc>().add(
-        InspectionPhotoSelected(file.path),
+    if (_isPickingImage) return;
+    setState(() => _isPickingImage = true);
+
+    try {
+      final file = await _picker.pickImage(
+        source: source,
+        maxWidth: 1280,
+        imageQuality: 85,
       );
+      if (file != null && mounted) {
+        context.read<InspectionFormBloc>().add(
+          InspectionPhotoSelected(file.path),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isPickingImage = false);
+      }
     }
   }
 
@@ -132,8 +142,9 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                     children: [
                       Text(
                         widget.workOrder.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: colorScheme.onPrimary,
                           fontSize: 15,
                         ),
                       ),
@@ -142,7 +153,7 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                         widget.workOrder.address,
                         style: TextStyle(
                           fontSize: 13,
-                          color: colorScheme.onSurfaceVariant,
+                          color: colorScheme.onPrimary,
                         ),
                       ),
                     ],
@@ -247,7 +258,7 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: state.isReadOnly
+                          onPressed: (state.isReadOnly || _isPickingImage)
                               ? null
                               : () => _pickImage(ImageSource.camera),
                           icon: const Icon(Icons.camera_alt_outlined),
@@ -257,7 +268,7 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: state.isReadOnly
+                          onPressed: (state.isReadOnly || _isPickingImage)
                               ? null
                               : () => _pickImage(ImageSource.gallery),
                           icon: const Icon(Icons.photo_library_outlined),
