@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'core/di/service_locator.dart';
-import 'core/network/network_status_cubit.dart';
-import 'core/routing/app_router.dart';
-import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'features/auth/presentation/bloc/auth_event.dart';
-import 'features/auth/presentation/bloc/auth_state.dart';
-import 'features/auth/presentation/ui/login_page.dart';
-import 'features/inspections/domain/repositories/inspections_repository.dart';
-import 'features/work_orders/presentation/bloc/work_orders_bloc.dart';
-import 'features/work_orders/presentation/bloc/work_orders_event.dart';
-import 'features/work_orders/presentation/ui/work_orders_page.dart';
+import 'package:orbytis_challenge/core/di/service_locator.dart';
+import 'package:orbytis_challenge/core/network/network_status_cubit.dart';
+import 'package:orbytis_challenge/core/routing/app_router.dart';
+import 'package:orbytis_challenge/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:orbytis_challenge/features/auth/presentation/bloc/auth_event.dart';
+import 'package:orbytis_challenge/features/auth/presentation/bloc/auth_state.dart';
+import 'package:orbytis_challenge/features/auth/presentation/ui/login_page.dart';
+import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
+import 'package:orbytis_challenge/features/work_orders/presentation/bloc/work_orders_bloc.dart';
+import 'package:orbytis_challenge/features/work_orders/presentation/bloc/work_orders_event.dart';
+import 'package:orbytis_challenge/features/work_orders/presentation/ui/work_orders_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

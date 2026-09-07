@@ -1,4 +1,4 @@
-import '../../../domain/entities/inspection_entity.dart';
+import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
 
 sealed class InspectionsHistoryState {
   const InspectionsHistoryState();

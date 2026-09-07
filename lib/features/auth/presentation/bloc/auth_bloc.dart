@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/errors/failure.dart';
-import '../../domain/repositories/auth_repository.dart';
-import 'auth_event.dart';
-import 'auth_state.dart';
+import 'package:orbytis_challenge/core/errors/failure.dart';
+import 'package:orbytis_challenge/features/auth/domain/repositories/auth_repository.dart';
+import 'package:orbytis_challenge/features/auth/presentation/bloc/auth_event.dart';
+import 'package:orbytis_challenge/features/auth/presentation/bloc/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;

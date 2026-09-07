@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../features/auth/presentation/ui/login_page.dart';
-import '../../features/inspections/presentation/bloc/form/inspection_form_bloc.dart';
-import '../../features/inspections/presentation/bloc/form/inspection_form_event.dart';
-import '../../features/inspections/presentation/bloc/history/inspections_history_bloc.dart';
-import '../../features/inspections/presentation/bloc/history/inspections_history_event.dart';
-import '../../features/inspections/presentation/ui/inspection_form_page.dart';
-import '../../features/inspections/presentation/ui/inspections_history_page.dart';
-import '../../features/work_orders/domain/entities/work_order_entity.dart';
-import '../../features/work_orders/presentation/bloc/work_orders_bloc.dart';
-import '../../features/work_orders/presentation/bloc/work_orders_event.dart';
-import '../../features/work_orders/presentation/ui/work_orders_page.dart';
-import '../di/service_locator.dart';
+import 'package:orbytis_challenge/core/di/service_locator.dart';
+import 'package:orbytis_challenge/features/auth/presentation/ui/login_page.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_bloc.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_event.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_bloc.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_event.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/ui/inspection_form_page.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/ui/inspections_history_page.dart';
+import 'package:orbytis_challenge/features/work_orders/domain/entities/work_order_entity.dart';
+import 'package:orbytis_challenge/features/work_orders/presentation/bloc/work_orders_bloc.dart';
+import 'package:orbytis_challenge/features/work_orders/presentation/bloc/work_orders_event.dart';
+import 'package:orbytis_challenge/features/work_orders/presentation/ui/work_orders_page.dart';
 
 abstract final class AppRoutes {
   static const String login = '/login';

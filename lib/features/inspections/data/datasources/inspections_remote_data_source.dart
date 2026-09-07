@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import '../../../../core/errors/failure.dart';
-import '../models/inspection_model.dart';
+import 'package:orbytis_challenge/core/errors/failure.dart';
+import 'package:orbytis_challenge/features/inspections/data/models/inspection_model.dart';
 
 abstract interface class InspectionsRemoteDataSource {
   /// Uploads inspection evidence to POST /inspections using multipart/form-data.

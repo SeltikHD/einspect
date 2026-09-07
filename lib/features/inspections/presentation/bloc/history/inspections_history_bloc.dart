@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/errors/failure.dart';
-import '../../../domain/entities/inspection_entity.dart';
-import '../../../domain/repositories/inspections_repository.dart';
-import 'inspections_history_event.dart';
-import 'inspections_history_state.dart';
+import 'package:orbytis_challenge/core/errors/failure.dart';
+import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_event.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_state.dart';
 
 class InspectionsHistoryBloc
     extends Bloc<InspectionsHistoryEvent, InspectionsHistoryState> {

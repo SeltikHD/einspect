@@ -1,7 +1,6 @@
+import 'package:orbytis_challenge/core/database/tables/database_table.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
-import 'tables/database_table.dart';
 
 class DbHelper {
   static const String _databaseName = 'field_inspection.db';

@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../../domain/entities/auth_session_entity.dart';
-import 'user_model.dart';
+import 'package:orbytis_challenge/features/auth/data/models/user_model.dart';
+import 'package:orbytis_challenge/features/auth/domain/entities/auth_session_entity.dart';
 
 part 'login_response_model.freezed.dart';
 part 'login_response_model.g.dart';

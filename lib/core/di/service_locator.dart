@@ -2,26 +2,26 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../features/auth/data/datasources/auth_local_data_source.dart';
-import '../../features/auth/data/datasources/auth_remote_data_source.dart';
-import '../../features/auth/data/repositories/auth_repository_impl.dart';
-import '../../features/auth/domain/repositories/auth_repository.dart';
-import '../../features/auth/presentation/bloc/auth_bloc.dart';
-import '../../features/inspections/data/datasources/inspections_local_data_source.dart';
-import '../../features/inspections/data/datasources/inspections_remote_data_source.dart';
-import '../../features/inspections/data/repositories/inspections_repository_impl.dart';
-import '../../features/inspections/domain/repositories/inspections_repository.dart';
-import '../../features/inspections/presentation/bloc/form/inspection_form_bloc.dart';
-import '../../features/inspections/presentation/bloc/history/inspections_history_bloc.dart';
-import '../../features/work_orders/data/datasources/work_orders_remote_data_source.dart';
-import '../../features/work_orders/data/repositories/work_orders_repository_impl.dart';
-import '../../features/work_orders/domain/repositories/work_orders_repository.dart';
-import '../../features/work_orders/presentation/bloc/work_orders_bloc.dart';
-import '../database/db_helper.dart';
-import '../database/tables/database_table.dart';
-import '../database/tables/inspections_table.dart';
-import '../network/api_client.dart';
-import '../network/network_info.dart';
+import 'package:orbytis_challenge/core/database/db_helper.dart';
+import 'package:orbytis_challenge/core/database/tables/database_table.dart';
+import 'package:orbytis_challenge/core/database/tables/inspections_table.dart';
+import 'package:orbytis_challenge/core/network/api_client.dart';
+import 'package:orbytis_challenge/core/network/network_info.dart';
+import 'package:orbytis_challenge/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:orbytis_challenge/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:orbytis_challenge/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:orbytis_challenge/features/auth/domain/repositories/auth_repository.dart';
+import 'package:orbytis_challenge/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:orbytis_challenge/features/inspections/data/datasources/inspections_local_data_source.dart';
+import 'package:orbytis_challenge/features/inspections/data/datasources/inspections_remote_data_source.dart';
+import 'package:orbytis_challenge/features/inspections/data/repositories/inspections_repository_impl.dart';
+import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_bloc.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_bloc.dart';
+import 'package:orbytis_challenge/features/work_orders/data/datasources/work_orders_remote_data_source.dart';
+import 'package:orbytis_challenge/features/work_orders/data/repositories/work_orders_repository_impl.dart';
+import 'package:orbytis_challenge/features/work_orders/domain/repositories/work_orders_repository.dart';
+import 'package:orbytis_challenge/features/work_orders/presentation/bloc/work_orders_bloc.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -48,7 +48,7 @@ Future<AppDependencies> setupServiceLocator() async {
   );
 
   // Database
-  List<DatabaseTable> tables = [InspectionsTable()];
+  final List<DatabaseTable> tables = [InspectionsTable()];
   sl.registerLazySingleton<DbHelper>(() => DbHelper(tables: tables));
 
   // Network

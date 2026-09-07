@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/widgets/app_status_badge.dart';
-import '../../../../inspections/domain/entities/inspection_entity.dart';
-import '../../../domain/entities/work_order_entity.dart';
+import 'package:orbytis_challenge/core/widgets/app_status_badge.dart';
+import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:orbytis_challenge/features/work_orders/domain/entities/work_order_entity.dart';
 
 class WorkOrderCard extends StatelessWidget {
   final WorkOrderEntity workOrder;

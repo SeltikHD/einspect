@@ -1,12 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:orbytis_challenge/core/errors/failure.dart';
+import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_event.dart';
+import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_state.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../../../../core/errors/failure.dart';
-import '../../../domain/entities/inspection_entity.dart';
-import '../../../domain/repositories/inspections_repository.dart';
-import 'inspection_form_event.dart';
-import 'inspection_form_state.dart';
 
 class InspectionFormBloc
     extends Bloc<InspectionFormEvent, InspectionFormState> {
@@ -145,7 +144,7 @@ class InspectionFormBloc
     emit(state.copyWith(isFetchingLocation: true));
 
     try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         emit(
           state.copyWith(

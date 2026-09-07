@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import '../../../../core/errors/failure.dart';
-import '../../../../core/network/network_info.dart';
-import '../../domain/entities/inspection_entity.dart';
-import '../../domain/repositories/inspections_repository.dart';
-import '../datasources/inspections_local_data_source.dart';
-import '../datasources/inspections_remote_data_source.dart';
-import '../models/inspection_model.dart';
+import 'package:orbytis_challenge/core/errors/failure.dart';
+import 'package:orbytis_challenge/core/network/network_info.dart';
+import 'package:orbytis_challenge/features/inspections/data/datasources/inspections_local_data_source.dart';
+import 'package:orbytis_challenge/features/inspections/data/datasources/inspections_remote_data_source.dart';
+import 'package:orbytis_challenge/features/inspections/data/models/inspection_model.dart';
+import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
 
 final class InspectionsRepositoryImpl implements InspectionsRepository {
   final InspectionsLocalDataSource _localDataSource;

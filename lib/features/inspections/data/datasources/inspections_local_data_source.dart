@@ -1,12 +1,11 @@
 import 'dart:io';
 
+import 'package:orbytis_challenge/core/database/db_helper.dart';
+import 'package:orbytis_challenge/core/database/tables/inspections_table.dart';
+import 'package:orbytis_challenge/core/errors/failure.dart';
+import 'package:orbytis_challenge/features/inspections/data/models/inspection_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-
-import '../../../../core/database/db_helper.dart';
-import '../../../../core/database/tables/inspections_table.dart';
-import '../../../../core/errors/failure.dart';
-import '../models/inspection_model.dart';
 
 abstract interface class InspectionsLocalDataSource {
   Future<void> insertOrUpdate(InspectionModel inspection);

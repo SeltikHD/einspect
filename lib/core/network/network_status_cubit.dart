@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'network_info.dart';
+import 'package:orbytis_challenge/core/network/network_info.dart';
 
 final class NetworkStatusCubit extends Cubit<bool> {
   final NetworkInfo _networkInfo;

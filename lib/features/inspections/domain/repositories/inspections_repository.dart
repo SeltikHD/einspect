@@ -1,4 +1,4 @@
-import '../entities/inspection_entity.dart';
+import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
 
 enum SyncBatchStatus { inProgress, success, failure }
 

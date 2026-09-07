@@ -1,4 +1,4 @@
-import 'database_table.dart';
+import 'package:orbytis_challenge/core/database/tables/database_table.dart';
 
 /// Schema definition and business rules for the offline inspection queue.
 ///

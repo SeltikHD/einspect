@@ -1,4 +1,4 @@
-import '../../domain/entities/user_entity.dart';
+import 'package:orbytis_challenge/features/auth/domain/entities/user_entity.dart';
 
 sealed class AuthState {
   const AuthState();

@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/errors/failure.dart';
-import '../../../inspections/domain/entities/inspection_entity.dart';
-import '../../../inspections/domain/repositories/inspections_repository.dart';
-import '../../domain/entities/work_order_entity.dart';
-import '../../domain/repositories/work_orders_repository.dart';
-import 'work_orders_event.dart';
-import 'work_orders_state.dart';
+import 'package:orbytis_challenge/core/errors/failure.dart';
+import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
+import 'package:orbytis_challenge/features/work_orders/domain/entities/work_order_entity.dart';
+import 'package:orbytis_challenge/features/work_orders/domain/repositories/work_orders_repository.dart';
+import 'package:orbytis_challenge/features/work_orders/presentation/bloc/work_orders_event.dart';
+import 'package:orbytis_challenge/features/work_orders/presentation/bloc/work_orders_state.dart';
 
 class WorkOrdersBloc extends Bloc<WorkOrdersEvent, WorkOrdersState> {
   final WorkOrdersRepository _repository;

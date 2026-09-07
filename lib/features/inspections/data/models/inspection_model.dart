@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../core/database/tables/inspections_table.dart';
-import '../../domain/entities/inspection_entity.dart';
+import 'package:orbytis_challenge/core/database/tables/inspections_table.dart';
+import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
 
 part 'inspection_model.freezed.dart';
 part 'inspection_model.g.dart';

@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/work_order_entity.dart';
+import 'package:orbytis_challenge/features/work_orders/domain/entities/work_order_entity.dart';
 
 part 'work_order_model.freezed.dart';
 part 'work_order_model.g.dart';
