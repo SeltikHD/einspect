@@ -3,18 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/di/service_locator.dart';
+import '../../../../core/routing/app_router.dart';
 import '../../../../core/widgets/app_filter_chip.dart';
 import '../../../../core/widgets/offline_banner.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
-import '../../../inspections/presentation/bloc/form/inspection_form_bloc.dart';
-import '../../../inspections/presentation/bloc/form/inspection_form_event.dart';
-import '../../../inspections/presentation/bloc/history/inspections_history_bloc.dart';
-import '../../../inspections/presentation/bloc/history/inspections_history_event.dart';
-import '../../../inspections/presentation/ui/inspection_form_page.dart';
-import '../../../inspections/presentation/ui/inspections_history_page.dart';
 import '../bloc/work_orders_bloc.dart';
 import '../bloc/work_orders_event.dart';
 import '../bloc/work_orders_state.dart';
@@ -92,15 +86,8 @@ class WorkOrdersPage extends StatelessWidget {
             tooltip: 'Histórico de Inspeções',
             icon: const Icon(Icons.history),
             onPressed: () async {
-              await Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => BlocProvider(
-                    create: (_) => sl<InspectionsHistoryBloc>()
-                      ..add(InspectionsHistoryFetchRequested(userId: userId)),
-                    child: const InspectionsHistoryPage(),
-                  ),
-                ),
-              );
+              await Navigator.of(context)
+                  .pushNamed(AppRoutes.inspectionsHistory, arguments: userId);
               if (context.mounted) _refresh(context);
             },
           ),
@@ -250,23 +237,9 @@ class WorkOrdersPage extends StatelessWidget {
                           workOrder: workOrder,
                           localInspectionStatus: inspectionStatus,
                           onTap: () async {
-                            await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider(
-                                  create: (_) => sl<InspectionFormBloc>()
-                                    ..add(
-                                      InspectionFormStarted(
-                                        workOrderId: workOrder.id,
-                                        userId: userId,
-                                        targetLatitude: workOrder.latitude,
-                                        targetLongitude: workOrder.longitude
-                                      ),
-                                    ),
-                                  child: InspectionFormPage(
-                                    workOrder: workOrder,
-                                  ),
-                                ),
-                              ),
+                            await Navigator.of(context).pushNamed(
+                              AppRoutes.inspectionForm,
+                              arguments: (workOrder: workOrder, userId: userId),
                             );
                             if (context.mounted) _refresh(context);
                           },

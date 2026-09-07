@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../core/errors/failure.dart';
 import '../../../domain/entities/inspection_entity.dart';
 import '../../../domain/repositories/inspections_repository.dart';
 import 'inspections_history_event.dart';
@@ -38,7 +39,11 @@ class InspectionsHistoryBloc
         ),
       );
     } catch (e) {
-      emit(InspectionsHistoryError(e.toString().replaceAll('Exception: ', '')));
+      emit(
+        InspectionsHistoryError(
+          failureMessage(e, fallback: 'Não foi possível carregar o histórico.'),
+        ),
+      );
     }
   }
 
@@ -47,7 +52,10 @@ class InspectionsHistoryBloc
     Emitter<InspectionsHistoryState> emit,
   ) async {
     try {
-      await _repository.retryInspection(event.clientId);
+      await _repository.retryInspection(
+        clientId: event.clientId,
+        userId: event.userId,
+      );
       final list = await _repository.getInspections(
         userId: _currentUserId,
         statusFilter: _currentFilter,
@@ -59,7 +67,11 @@ class InspectionsHistoryBloc
         ),
       );
     } catch (e) {
-      emit(InspectionsHistoryError(e.toString().replaceAll('Exception: ', '')));
+      emit(
+        InspectionsHistoryError(
+          failureMessage(e, fallback: 'Não foi possível reenviar a inspeção.'),
+        ),
+      );
     }
   }
 
@@ -85,7 +97,11 @@ class InspectionsHistoryBloc
         ),
       );
     } catch (e) {
-      emit(InspectionsHistoryError(e.toString().replaceAll('Exception: ', '')));
+      emit(
+        InspectionsHistoryError(
+          failureMessage(e, fallback: 'Não foi possível sincronizar a fila.'),
+        ),
+      );
     }
   }
 }

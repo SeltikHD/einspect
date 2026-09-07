@@ -25,7 +25,21 @@ import '../network/network_info.dart';
 
 final GetIt sl = GetIt.instance;
 
-Future<void> setupServiceLocator() async {
+final class AppDependencies {
+  final AuthBloc authBloc;
+  final WorkOrdersBloc workOrdersBloc;
+  final InspectionsRepository inspectionsRepository;
+  final NetworkInfo networkInfo;
+
+  const AppDependencies({
+    required this.authBloc,
+    required this.workOrdersBloc,
+    required this.inspectionsRepository,
+    required this.networkInfo,
+  });
+}
+
+Future<AppDependencies> setupServiceLocator() async {
   // External
   sl.registerLazySingleton<FlutterSecureStorage>(
     () => const FlutterSecureStorage(
@@ -106,5 +120,12 @@ Future<void> setupServiceLocator() async {
 
   sl.registerFactory<InspectionsHistoryBloc>(
     () => InspectionsHistoryBloc(repository: sl<InspectionsRepository>()),
+  );
+
+  return AppDependencies(
+    authBloc: sl<AuthBloc>(),
+    workOrdersBloc: sl<WorkOrdersBloc>(),
+    inspectionsRepository: sl<InspectionsRepository>(),
+    networkInfo: sl<NetworkInfo>(),
   );
 }

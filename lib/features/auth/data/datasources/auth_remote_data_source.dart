@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/errors/failure.dart';
 import '../../domain/entities/user_entity.dart';
 import '../models/login_response_model.dart';
 import '../models/user_model.dart';
@@ -31,30 +32,36 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.data == null) {
-        throw Exception('Resposta vazia recebida do servidor');
+        throw const NetworkFailure('Resposta vazia recebida do servidor.');
       }
 
       return LoginResponseModel.fromJson(response.data!);
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
         final message = e.response?.data?['message'] as String?;
-        throw Exception(message ?? 'Credenciais inválidas');
+        throw AuthenticationFailure(message ?? 'Credenciais inválidas.');
       }
 
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
-          throw Exception('Tempo limite de conexão esgotado. Verifique a API.');
+          throw const NetworkFailure(
+            'Tempo limite de conexão esgotado. Verifique a API.',
+          );
         case DioExceptionType.connectionError:
-          throw Exception(
+          throw const NetworkFailure(
             'Não foi possível conectar ao servidor. Verifique se o mock está rodando e a porta está configurada.',
           );
         default:
-          throw Exception('Ocorreu um erro de comunicação inesperado.');
+          throw const NetworkFailure(
+            'Ocorreu um erro de comunicação inesperado.',
+          );
       }
-    } catch (e) {
-      throw Exception('Erro ao processar autenticação.');
+    } on Failure {
+      rethrow;
+    } catch (_) {
+      throw const AuthenticationFailure('Erro ao processar autenticação.');
     }
   }
 
@@ -64,15 +71,15 @@ final class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final response = await _dio.get<Map<String, dynamic>>('/auth/me');
 
       if (response.data == null) {
-        throw Exception('Perfil do usuário não encontrado');
+        throw const AuthenticationFailure('Perfil do usuário não encontrado.');
       }
 
       return UserModel.fromJson(response.data!).toEntity();
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
-        throw Exception('Sessão expirada ou não autorizado');
+        throw const AuthenticationFailure('Sessão expirada ou não autorizado.');
       }
-      throw Exception('Falha ao buscar perfil do usuário');
+      throw const NetworkFailure('Falha ao buscar perfil do usuário.');
     }
   }
 }

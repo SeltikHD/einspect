@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/di/service_locator.dart';
+import 'core/network/network_status_cubit.dart';
+import 'core/routing/app_router.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/auth/presentation/bloc/auth_state.dart';
@@ -13,12 +15,14 @@ import 'features/work_orders/presentation/ui/work_orders_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await setupServiceLocator();
-  runApp(const EInspectApp());
+  final dependencies = await setupServiceLocator();
+  runApp(EInspectApp(dependencies: dependencies));
 }
 
 class EInspectApp extends StatelessWidget {
-  const EInspectApp({super.key});
+  final AppDependencies dependencies;
+
+  const EInspectApp({super.key, required this.dependencies});
 
   static const Color _brandPrimary = Color(0xFF0072CE);
   static const Color _brandNavy = Color(0xFF0B1E36);
@@ -26,12 +30,23 @@ class EInspectApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthBloc>(
-      // Trigger token verification in secure storage immediately on startup
-      create: (_) => sl<AuthBloc>()..add(const AuthCheckRequested()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (_) => dependencies.authBloc..add(const AuthCheckRequested()),
+        ),
+        BlocProvider<WorkOrdersBloc>(
+          create: (_) => dependencies.workOrdersBloc,
+        ),
+        BlocProvider(
+          create: (_) =>
+              NetworkStatusCubit(networkInfo: dependencies.networkInfo),
+        ),
+      ],
       child: MaterialApp(
         title: 'eInspect',
         debugShowCheckedModeBanner: false,
+        onGenerateRoute: AppRouter.onGenerateRoute,
         theme: ThemeData(
           useMaterial3: true,
           scaffoldBackgroundColor: _surfaceLight,
@@ -74,7 +89,9 @@ class EInspectApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const AuthSessionGatekeeper(),
+        home: AuthSessionGatekeeper(
+          inspectionsRepository: dependencies.inspectionsRepository,
+        ),
       ),
     );
   }
@@ -83,7 +100,12 @@ class EInspectApp extends StatelessWidget {
 /// Root widget acting as a protective barrier based on authentication state.
 /// Ensures unauthenticated requests cannot access internal pages.
 class AuthSessionGatekeeper extends StatelessWidget {
-  const AuthSessionGatekeeper({super.key});
+  final InspectionsRepository _inspectionsRepository;
+
+  const AuthSessionGatekeeper({
+    super.key,
+    required this._inspectionsRepository,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -91,19 +113,17 @@ class AuthSessionGatekeeper extends StatelessWidget {
       listener: (context, state) {
         // Triggers automatic synchronization pipeline when technician logs in
         if (state is Authenticated) {
-          sl<InspectionsRepository>().startAutoSync(state.user.id);
+          _inspectionsRepository.startAutoSync(state.user.id);
+          context.read<WorkOrdersBloc>().add(
+            WorkOrdersFetchRequested(userId: state.user.id),
+          );
         } else if (state is Unauthenticated) {
-          sl<InspectionsRepository>().stopAutoSync();
+          _inspectionsRepository.stopAutoSync();
         }
       },
       builder: (context, state) {
         if (state is Authenticated) {
-          return BlocProvider<WorkOrdersBloc>(
-            create: (_) =>
-                sl<WorkOrdersBloc>()
-                  ..add(WorkOrdersFetchRequested(userId: state.user.id)),
-            child: const WorkOrdersPage(),
-          );
+          return const WorkOrdersPage();
         }
 
         if (state is Unauthenticated || state is AuthLoading) {

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/errors/failure.dart';
 import '../models/work_order_model.dart';
 
 abstract interface class WorkOrdersRemoteDataSource {
@@ -28,9 +29,13 @@ final class WorkOrdersRemoteDataSourceImpl
           .toList();
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
-        throw Exception('Sessão expirada. Faça login novamente.');
+        throw const AuthenticationFailure(
+          'Sessão expirada. Faça login novamente.',
+        );
       }
-      throw Exception('Falha ao sincronizar ordens de serviço remotas.');
+      throw const NetworkFailure(
+        'Falha ao sincronizar ordens de serviço remotas.',
+      );
     }
   }
 }

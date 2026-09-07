@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/errors/failure.dart';
 import '../models/inspection_model.dart';
 
 abstract interface class InspectionsRemoteDataSource {
@@ -42,7 +43,7 @@ final class InspectionsRemoteDataSourceImpl
       );
 
       if (response.data == null) {
-        throw Exception('Resposta vazia recebida do servidor');
+        throw const NetworkFailure('Resposta vazia recebida do servidor.');
       }
 
       return response.data!;
@@ -50,17 +51,19 @@ final class InspectionsRemoteDataSourceImpl
       // Unpack validation feedback returned from the backend (e.g., character length restrictions)
       if (e.response?.statusCode == 400) {
         final errorPayload = e.response?.data?['errors'];
-        throw Exception(
+        throw ValidationFailure(
           errorPayload?.toString() ?? 'Dados de inspeção inválidos',
         );
       }
 
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.connectionError) {
-        throw Exception('Sem conexão com o servidor para envio');
+        throw const NetworkFailure('Sem conexão com o servidor para envio.');
       }
 
-      throw Exception(e.message ?? 'Falha de comunicação no envio da inspeção');
+      throw NetworkFailure(
+        e.message ?? 'Falha de comunicação no envio da inspeção.',
+      );
     }
   }
 }

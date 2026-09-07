@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../../core/errors/failure.dart';
 import '../../../domain/entities/inspection_entity.dart';
 import '../../../domain/repositories/inspections_repository.dart';
 import 'inspection_form_event.dart';
@@ -99,13 +100,28 @@ class InspectionFormBloc
   ) async {
     if (state.isReadOnly) return;
 
-    // Immediately copy temp file to documents sandbox before OS cache eviction occurs
-    final permanentPath = await _repository.persistPhoto(
-      tempPath: event.photoPath,
-      clientId: state.clientId,
-    );
+    try {
+      final permanentPath = await _repository.persistPhoto(
+        tempPath: event.photoPath,
+        clientId: state.clientId,
+      );
 
-    emit(state.copyWith(photoPath: permanentPath));
+      final previousPath = state.photoPath;
+      if (previousPath != null && previousPath.isNotEmpty) {
+        await _repository.deletePhoto(previousPath);
+      }
+
+      emit(state.copyWith(photoPath: permanentPath));
+    } catch (error) {
+      emit(
+        state.copyWith(
+          errorMessage: failureMessage(
+            error,
+            fallback: 'Não foi possível salvar a evidência fotográfica.',
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _onPhotoRemoved(
@@ -293,7 +309,10 @@ class InspectionFormBloc
       emit(
         state.copyWith(
           submissionStatus: FormSubmissionStatus.failure,
-          errorMessage: e.toString().replaceAll('Exception: ', ''),
+          errorMessage: failureMessage(
+            e,
+            fallback: 'Não foi possível concluir a inspeção.',
+          ),
         ),
       );
     }

@@ -10,10 +10,13 @@ abstract interface class InspectionsRepository {
   Future<void> submitInspection(InspectionEntity inspection);
 
   /// Iterates through pending or failed queue items and pushes them to the server.
-  Future<void> syncPendingQueue({String? userId});
+  Future<void> syncPendingQueue({required String userId});
 
   /// Resets a failed inspection back to pending and re-executes the synchronization routine.
-  Future<void> retryInspection(String clientId);
+  Future<void> retryInspection({
+    required String clientId,
+    required String userId,
+  });
 
   /// Retrieves local inspections, optionally filtered by synchronization status.
   Future<List<InspectionEntity>> getInspections({
@@ -40,7 +43,7 @@ abstract interface class InspectionsRepository {
   void startAutoSync(String userId);
 
   /// Cancels background network listener on technician logout
-void stopAutoSync();
+  void stopAutoSync();
 
   /// Broadcasts sync progress notifications across the application
   Stream<SyncBatchStatus> get syncStatusStream;

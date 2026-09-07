@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import '../../../../core/errors/failure.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/entities/inspection_entity.dart';
 import '../../domain/repositories/inspections_repository.dart';
@@ -36,13 +37,16 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
 
   @override
   Future<void> submitInspection(InspectionEntity inspection) async {
-    final existing = await _localDataSource.findByClientId(inspection.clientId);
+    final existing = await _localDataSource.findByClientId(
+      clientId: inspection.clientId,
+      userId: inspection.userId,
+    );
     if (existing != null && existing.toEntity().isReadOnly) {
       throw StateError('Esta inspeção já foi finalizada.');
     }
 
     if (!inspection.isValidForSubmission) {
-      throw ArgumentError(
+      throw const ValidationFailure(
         'A inspeção deve conter observação válida (mínimo 10 caracteres), evidência fotográfica e GPS.',
       );
     }
@@ -63,8 +67,14 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
   }
 
   @override
-  Future<void> retryInspection(String clientId) async {
-    final existing = await _localDataSource.findByClientId(clientId);
+  Future<void> retryInspection({
+    required String clientId,
+    required String userId,
+  }) async {
+    final existing = await _localDataSource.findByClientId(
+      clientId: clientId,
+      userId: userId,
+    );
     if (existing == null) return;
 
     final queued = existing.copyWith(
@@ -78,7 +88,7 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
   }
 
   @override
-  Future<void> syncPendingQueue({String? userId}) async {
+  Future<void> syncPendingQueue({required String userId}) async {
     final queue = await _localDataSource.findSyncQueue(userId: userId);
     if (queue.isEmpty) return;
 
@@ -103,7 +113,10 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
       } catch (e) {
         final failedItem = item.copyWith(
           status: 'failed',
-          failureReason: e.toString().replaceAll('Exception: ', ''),
+          failureReason: failureMessage(
+            e,
+            fallback: 'Falha ao sincronizar a inspeção.',
+          ),
           updatedAt: DateTime.now(),
         );
 

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/errors/failure.dart';
 import '../../domain/repositories/auth_repository.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -7,8 +8,7 @@ import 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
 
-  AuthBloc({required this._authRepository})
-    : super(const AuthInitial()) {
+  AuthBloc({required this._authRepository}) : super(const AuthInitial()) {
     on<AuthCheckRequested>(_onAuthCheckRequested);
     on<AuthLoginSubmitted>(_onAuthLoginSubmitted);
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
@@ -60,7 +60,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (error) {
       emit(
         Unauthenticated(
-          errorMessage: error.toString().replaceAll('Exception: ', ''),
+          errorMessage: failureMessage(
+            error,
+            fallback: 'Não foi possível autenticar. Tente novamente.',
+          ),
         ),
       );
     }

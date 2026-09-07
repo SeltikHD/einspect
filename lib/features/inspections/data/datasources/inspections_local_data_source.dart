@@ -5,11 +5,15 @@ import 'package:sqflite/sqflite.dart';
 
 import '../../../../core/database/db_helper.dart';
 import '../../../../core/database/tables/inspections_table.dart';
+import '../../../../core/errors/failure.dart';
 import '../models/inspection_model.dart';
 
 abstract interface class InspectionsLocalDataSource {
   Future<void> insertOrUpdate(InspectionModel inspection);
-  Future<InspectionModel?> findByClientId(String clientId);
+  Future<InspectionModel?> findByClientId({
+    required String clientId,
+    required String userId,
+  });
   Future<InspectionModel?> findByWorkOrderId({
     required String workOrderId,
     required String userId,
@@ -29,7 +33,7 @@ abstract interface class InspectionsLocalDataSource {
   Future<void> deletePermanentPhoto(String filePath);
 
   /// Pulls all unacknowledged inspections needing background remote transmission.
-  Future<List<InspectionModel>> findSyncQueue({String? userId});
+  Future<List<InspectionModel>> findSyncQueue({required String userId});
 }
 
 final class InspectionsLocalDataSourceImpl
@@ -40,26 +44,42 @@ final class InspectionsLocalDataSourceImpl
 
   @override
   Future<void> insertOrUpdate(InspectionModel inspection) async {
-    final db = await _dbHelper.database;
-    await db.insert(
-      InspectionsTable().tableName,
-      inspection.toDatabase(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    try {
+      final db = await _dbHelper.database;
+      await db.insert(
+        InspectionsTable().tableName,
+        inspection.toDatabase(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } on DatabaseException {
+      throw const DatabaseFailure(
+        'Não foi possível salvar a inspeção localmente.',
+      );
+    }
   }
 
   @override
-  Future<InspectionModel?> findByClientId(String clientId) async {
-    final db = await _dbHelper.database;
-    final results = await db.query(
-      InspectionsTable().tableName,
-      where: '${InspectionsTable.columnClientId} = ?',
-      whereArgs: [clientId],
-      limit: 1,
-    );
+  Future<InspectionModel?> findByClientId({
+    required String clientId,
+    required String userId,
+  }) async {
+    try {
+      final db = await _dbHelper.database;
+      final results = await db.query(
+        InspectionsTable().tableName,
+        where:
+            '${InspectionsTable.columnClientId} = ? AND ${InspectionsTable.columnUserId} = ?',
+        whereArgs: [clientId, userId],
+        limit: 1,
+      );
 
-    if (results.isEmpty) return null;
-    return InspectionModel.fromDatabase(results.first);
+      if (results.isEmpty) return null;
+      return InspectionModel.fromDatabase(results.first);
+    } on DatabaseException {
+      throw const DatabaseFailure(
+        'Não foi possível consultar a inspeção local.',
+      );
+    }
   }
 
   @override
@@ -67,16 +87,22 @@ final class InspectionsLocalDataSourceImpl
     required String workOrderId,
     required String userId,
   }) async {
-    final db = await _dbHelper.database;
-    final results = await db.query(
-      InspectionsTable().tableName,
-      where:
-          '${InspectionsTable.columnWorkOrderId} = ? AND ${InspectionsTable.columnUserId} = ?',
-      whereArgs: [workOrderId, userId],
-      limit: 1,
-    );
-    if (results.isEmpty) return null;
-    return InspectionModel.fromDatabase(results.first);
+    try {
+      final db = await _dbHelper.database;
+      final results = await db.query(
+        InspectionsTable().tableName,
+        where:
+            '${InspectionsTable.columnWorkOrderId} = ? AND ${InspectionsTable.columnUserId} = ?',
+        whereArgs: [workOrderId, userId],
+        limit: 1,
+      );
+      if (results.isEmpty) return null;
+      return InspectionModel.fromDatabase(results.first);
+    } on DatabaseException {
+      throw const DatabaseFailure(
+        'Não foi possível consultar a inspeção local.',
+      );
+    }
   }
 
   @override
@@ -84,22 +110,28 @@ final class InspectionsLocalDataSourceImpl
     required String userId,
     String? status,
   }) async {
-    final db = await _dbHelper.database;
-    final whereClauses = ['${InspectionsTable.columnUserId} = ?'];
-    final whereArgs = <dynamic>[userId];
+    try {
+      final db = await _dbHelper.database;
+      final whereClauses = ['${InspectionsTable.columnUserId} = ?'];
+      final whereArgs = <dynamic>[userId];
 
-    if (status != null) {
-      whereClauses.add('${InspectionsTable.columnStatus} = ?');
-      whereArgs.add(status);
+      if (status != null) {
+        whereClauses.add('${InspectionsTable.columnStatus} = ?');
+        whereArgs.add(status);
+      }
+
+      final results = await db.query(
+        InspectionsTable().tableName,
+        where: whereClauses.join(' AND '),
+        whereArgs: whereArgs,
+        orderBy: '${InspectionsTable.columnCreatedAt} DESC',
+      );
+      return results.map(InspectionModel.fromDatabase).toList();
+    } on DatabaseException {
+      throw const DatabaseFailure(
+        'Não foi possível carregar o histórico local.',
+      );
     }
-
-    final results = await db.query(
-      InspectionsTable().tableName,
-      where: whereClauses.join(' AND '),
-      whereArgs: whereArgs,
-      orderBy: '${InspectionsTable.columnCreatedAt} DESC',
-    );
-    return results.map(InspectionModel.fromDatabase).toList();
   }
 
   @override
@@ -134,24 +166,19 @@ final class InspectionsLocalDataSourceImpl
   }
 
   @override
-  Future<List<InspectionModel>> findSyncQueue({String? userId}) async {
-    final db = await _dbHelper.database;
-    final whereClauses = [
-      '(${InspectionsTable.columnStatus} = ? OR ${InspectionsTable.columnStatus} = ?)',
-    ];
-    final whereArgs = <dynamic>['pending', 'failed'];
-
-    if (userId != null) {
-      whereClauses.add('${InspectionsTable.columnUserId} = ?');
-      whereArgs.add(userId);
+  Future<List<InspectionModel>> findSyncQueue({required String userId}) async {
+    try {
+      final db = await _dbHelper.database;
+      final results = await db.query(
+        InspectionsTable().tableName,
+        where:
+            '(${InspectionsTable.columnStatus} = ? OR ${InspectionsTable.columnStatus} = ?) AND ${InspectionsTable.columnUserId} = ?',
+        whereArgs: ['pending', 'failed', userId],
+        orderBy: '${InspectionsTable.columnCreatedAt} ASC',
+      );
+      return results.map(InspectionModel.fromDatabase).toList();
+    } on DatabaseException {
+      throw const DatabaseFailure('Não foi possível carregar a fila local.');
     }
-
-    final results = await db.query(
-      InspectionsTable().tableName,
-      where: whereClauses.join(' AND '),
-      whereArgs: whereArgs,
-      orderBy: '${InspectionsTable.columnCreatedAt} ASC',
-    );
-    return results.map(InspectionModel.fromDatabase).toList();
   }
 }

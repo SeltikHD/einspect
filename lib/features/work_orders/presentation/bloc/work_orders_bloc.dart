@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/errors/failure.dart';
 import '../../../inspections/domain/entities/inspection_entity.dart';
 import '../../../inspections/domain/repositories/inspections_repository.dart';
 import '../../domain/entities/work_order_entity.dart';
@@ -47,7 +48,12 @@ class WorkOrdersBloc extends Bloc<WorkOrdersEvent, WorkOrdersState> {
       _emitFilteredOrders(emit);
     } catch (e) {
       emit(
-        WorkOrdersError(message: e.toString().replaceAll('Exception: ', '')),
+        WorkOrdersError(
+          message: failureMessage(
+            e,
+            fallback: 'Não foi possível carregar as ordens de serviço.',
+          ),
+        ),
       );
     } finally {
       event.completer?.complete();

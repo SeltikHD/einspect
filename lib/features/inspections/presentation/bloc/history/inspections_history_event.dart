@@ -16,8 +16,12 @@ final class InspectionsHistoryFetchRequested extends InspectionsHistoryEvent {
 
 final class InspectionRetryRequested extends InspectionsHistoryEvent {
   final String clientId;
+  final String userId;
 
-  const InspectionRetryRequested(this.clientId);
+  const InspectionRetryRequested({
+    required this.clientId,
+    required this.userId,
+  });
 }
 
 final class InspectionsManualSyncRequested extends InspectionsHistoryEvent {

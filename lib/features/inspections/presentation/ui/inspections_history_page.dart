@@ -13,6 +13,11 @@ import 'widgets/inspection_history_card.dart';
 class InspectionsHistoryPage extends StatelessWidget {
   const InspectionsHistoryPage({super.key});
 
+  String _getUserId(BuildContext context) {
+    final state = context.read<AuthBloc>().state;
+    return state is Authenticated ? state.user.id : '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,7 +190,10 @@ class InspectionsHistoryPage extends StatelessWidget {
                         inspection: item,
                         onRetry: item.status == InspectionStatus.failed
                             ? () => context.read<InspectionsHistoryBloc>().add(
-                                InspectionRetryRequested(item.clientId),
+                                InspectionRetryRequested(
+                                  clientId: item.clientId,
+                                  userId: _getUserId(context),
+                                ),
                               )
                             : null,
                       );
