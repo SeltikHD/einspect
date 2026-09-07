@@ -1,3 +1,4 @@
+import 'package:einspect/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppFilterChip extends StatelessWidget {
@@ -18,14 +19,16 @@ class AppFilterChip extends StatelessWidget {
       label: Text(label),
       selected: isSelected,
       onSelected: (_) => onSelected(),
-      selectedColor: const Color(0xFF0072CE),
-      backgroundColor: const Color(0xFFF1F5F9),
-      side: BorderSide.none,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      selectedColor: AppColors.primary,
+      backgroundColor: AppColors.surface,
+      side: const BorderSide(color: AppColors.border),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      visualDensity: VisualDensity.standard,
       labelStyle: TextStyle(
         fontSize: 13,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        color: isSelected ? Colors.white : const Color(0xFF0B1E36),
+        color: isSelected ? Colors.white : AppColors.text,
       ),
     );
   }

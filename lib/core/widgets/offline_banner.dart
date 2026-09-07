@@ -1,4 +1,6 @@
 import 'package:einspect/core/network/network_status_cubit.dart';
+import 'package:einspect/core/theme/app_colors.dart';
+import 'package:einspect/core/widgets/app_alert_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,25 +13,10 @@ class OfflineBanner extends StatelessWidget {
 
     if (isOnline) return const SizedBox.shrink();
 
-    return Container(
-      width: double.infinity,
-      color: const Color(0xFFD32F2F),
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.wifi_off, color: Colors.white, size: 16),
-          SizedBox(width: 8),
-          Text(
-            'Sem conexão com a internet — Modo offline ativo',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
+    return const AppAlertBanner(
+      message: 'Sem conexão com a internet. Modo offline ativo.',
+      icon: Icons.wifi_off,
+      color: AppColors.danger,
     );
   }
 }

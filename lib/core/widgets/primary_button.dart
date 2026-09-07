@@ -1,3 +1,4 @@
+import 'package:einspect/core/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 
 class PrimaryButton extends StatelessWidget {
@@ -14,18 +15,6 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: isLoading ? null : onPressed,
-      child: isLoading
-          ? const SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            )
-          : Text(label, style: const TextStyle(fontSize: 16)),
-    );
+    return AppButton(label: label, onPressed: onPressed, isLoading: isLoading);
   }
 }
