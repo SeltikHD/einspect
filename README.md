@@ -179,7 +179,8 @@ Inspeções `synced` ou já encaminhadas para a fila bloqueiam edição e exibem
 1. Compressão dinâmica de imagem antes do salvamento permanente, respeitando qualidade e tamanho máximos.
 2. Formulários dinâmicos via `GET /work-orders/:id/form-schema`, com validação orientada pelo schema.
 3. Sincronização periódica em background com o app fechado, usando `workmanager` e políticas de bateria/conectividade.
-4. Mais testes de integração e testes de widget/página para permissões, geofence e recuperação após restart.
+4. Separação da lista de Ordens de Serviço inspecionadas e pendentes.
+5. Mais testes de integração e testes de widget/página para permissões, geofence e recuperação após restart.
 
 ## Referências
 
