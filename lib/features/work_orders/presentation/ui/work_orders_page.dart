@@ -35,6 +35,7 @@ class WorkOrdersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userId = _getUserId(context);
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
@@ -52,13 +53,17 @@ class WorkOrdersPage extends StatelessWidget {
               final onSurface = Theme.of(context).colorScheme.onSurface;
 
               return [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: WorkOrderSort.urgent,
                   child: Row(
                     children: [
-                      Icon(Icons.priority_high, color: Colors.red, size: 18),
-                      SizedBox(width: 8),
-                      Text('Mais urgentes'),
+                      Icon(
+                        Icons.priority_high,
+                        color: colorScheme.error,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 8),
+                      const Text('Mais urgentes'),
                     ],
                   ),
                 ),
@@ -108,7 +113,7 @@ class WorkOrdersPage extends StatelessWidget {
 
           // Filter topbar
           Container(
-            color: Colors.white,
+            color: colorScheme.surface,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: BlocBuilder<WorkOrdersBloc, WorkOrdersState>(
               builder: (context, state) {
@@ -161,7 +166,7 @@ class WorkOrdersPage extends StatelessWidget {
               },
             ),
           ),
-          const Divider(height: 1, color: Color(0xFFE2E8F0)),
+          const Divider(height: 1),
 
           // List content
           Expanded(
@@ -178,10 +183,10 @@ class WorkOrdersPage extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.cloud_off,
                             size: 56,
-                            color: Colors.red,
+                            color: colorScheme.error,
                           ),
                           const SizedBox(height: 12),
                           Text(
@@ -214,10 +219,13 @@ class WorkOrdersPage extends StatelessWidget {
                           color: Colors.grey,
                         ),
                         const SizedBox(height: 12),
-                        const Center(
+                        Center(
                           child: Text(
                             'Nenhuma ordem de serviço neste filtro.',
-                            style: TextStyle(color: Colors.grey, fontSize: 16),
+                            style: TextStyle(
+                              color: colorScheme.onSurfaceVariant,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                         SizedBox(

@@ -9,10 +9,12 @@ class GeofenceWarning extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+
     return AppAlertBanner(
       message: message,
       icon: Icons.warning_amber_rounded,
-      color: AppColors.warning,
+      color: colors.warning,
     );
   }
 }

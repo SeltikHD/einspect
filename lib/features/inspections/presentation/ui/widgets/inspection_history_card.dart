@@ -14,22 +14,26 @@ class InspectionHistoryCard extends StatelessWidget {
     this.onRetry,
   });
 
-  (String, Color) _statusDetails(InspectionStatus status) {
+  (String, Color) _statusDetails(
+    InspectionStatus status,
+    AppColorPalette colors,
+  ) {
     switch (status) {
       case InspectionStatus.draft:
-        return ('RASCUNHO', AppColors.neutral);
+        return ('RASCUNHO', colors.neutral);
       case InspectionStatus.pending:
-        return ('PENDENTE', AppColors.warning);
+        return ('PENDENTE', colors.warning);
       case InspectionStatus.synced:
-        return ('SINCRONIZADA', AppColors.success);
+        return ('SINCRONIZADA', colors.success);
       case InspectionStatus.failed:
-        return ('FALHA', AppColors.danger);
+        return ('FALHA', colors.danger);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final (label, color) = _statusDetails(inspection.status);
+    final colors = AppColors.of(context);
+    final (label, color) = _statusDetails(inspection.status, colors);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -63,24 +67,17 @@ class InspectionHistoryCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppColors.danger.withValues(alpha: .10),
+                  color: colors.danger.withValues(alpha: .10),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.error_outline,
-                      size: 16,
-                      color: AppColors.danger,
-                    ),
+                    Icon(Icons.error_outline, size: 16, color: colors.danger),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         inspection.failureReason!,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.danger,
-                        ),
+                        style: TextStyle(fontSize: 12, color: colors.danger),
                       ),
                     ),
                     if (onRetry != null)

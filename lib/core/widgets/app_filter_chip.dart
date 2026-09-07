@@ -17,7 +17,10 @@ class AppFilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = isSelected ? Colors.white : AppColors.neutral;
+    final colors = AppColors.of(context);
+    final foregroundColor = isSelected
+        ? Theme.of(context).colorScheme.onPrimary
+        : colors.neutral;
 
     return ChoiceChip(
       label: Text(label),
@@ -26,9 +29,9 @@ class AppFilterChip extends StatelessWidget {
           : Icon(icon, size: 18, color: foregroundColor),
       selected: isSelected,
       onSelected: (_) => onSelected(),
-      selectedColor: AppColors.primary,
-      backgroundColor: AppColors.surface,
-      side: const BorderSide(color: AppColors.border),
+      selectedColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       visualDensity: VisualDensity.standard,

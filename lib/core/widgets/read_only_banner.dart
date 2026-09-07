@@ -14,10 +14,12 @@ class ReadOnlyBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+
     return AppAlertBanner(
       message: message,
       icon: isSynced ? Icons.check_circle_outline : Icons.schedule,
-      color: isSynced ? AppColors.success : AppColors.warning,
+      color: isSynced ? colors.success : colors.warning,
     );
   }
 }

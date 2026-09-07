@@ -44,6 +44,8 @@ class EInspectApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         onGenerateRoute: AppRouter.onGenerateRoute,
         theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
         home: AuthSessionGatekeeper(
           inspectionsRepository: dependencies.inspectionsRepository,
         ),

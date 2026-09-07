@@ -1,4 +1,3 @@
-import 'package:einspect/core/theme/app_colors.dart';
 import 'package:einspect/core/theme/app_dimensions.dart';
 import 'package:einspect/core/theme/app_spacing.dart';
 import 'package:flutter/material.dart';
@@ -37,9 +36,7 @@ class AppAlertBanner extends StatelessWidget {
             child: Text(
               message,
               style: TextStyle(
-                color: color == AppColors.warning
-                    ? const Color(0xFF7C4604)
-                    : color,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
               ),

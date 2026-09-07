@@ -19,6 +19,8 @@ class InspectionsHistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fila de Inspeções'),
@@ -31,12 +33,12 @@ class InspectionsHistoryPage extends StatelessWidget {
               return IconButton(
                 tooltip: 'Sincronizar Agora',
                 icon: isSyncing
-                    ? const SizedBox(
+                    ? SizedBox(
                         height: 18,
                         width: 18,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: Colors.white,
+                          color: colorScheme.onPrimary,
                         ),
                       )
                     : const Icon(Icons.sync),
@@ -54,7 +56,7 @@ class InspectionsHistoryPage extends StatelessWidget {
         children: [
           // Filter status selector
           Container(
-            color: Colors.white,
+            color: colorScheme.surface,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: BlocBuilder<InspectionsHistoryBloc, InspectionsHistoryState>(
               builder: (context, state) {
@@ -159,7 +161,7 @@ class InspectionsHistoryPage extends StatelessWidget {
               },
             ),
           ),
-          const Divider(height: 1, color: Color(0xFFE2E8F0)),
+          const Divider(height: 1),
 
           // Inspection list presentation
           Expanded(

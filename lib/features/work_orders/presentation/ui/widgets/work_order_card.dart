@@ -31,18 +31,18 @@ class WorkOrderCard extends StatelessWidget {
     }
   }
 
-  Color _getPriorityColor(String priority) {
+  Color _getPriorityColor(String priority, AppColorPalette colors) {
     switch (priority.toLowerCase()) {
       case 'urgent':
-        return AppColors.danger;
+        return colors.danger;
       case 'high':
-        return AppColors.danger;
+        return colors.danger;
       case 'medium':
-        return AppColors.warning;
+        return colors.warning;
       case 'low':
-        return AppColors.success;
+        return colors.success;
       default:
-        return AppColors.neutral;
+        return colors.neutral;
     }
   }
 
@@ -60,31 +60,34 @@ class WorkOrderCard extends StatelessWidget {
     }
   }
 
-  Color _getStatusColor(String status) {
+  Color _getStatusColor(String status, AppColorPalette colors) {
     switch (status.toLowerCase()) {
       case 'open':
-        return AppColors.primary;
+        return colors.primary;
       case 'in_progress':
-        return AppColors.warning;
+        return colors.warning;
       case 'done':
       case 'completed':
-        return AppColors.success;
+        return colors.success;
       default:
-        return AppColors.neutral;
+        return colors.neutral;
     }
   }
 
-  (String, Color)? _getInspectionBadge(InspectionStatus? status) {
+  (String, Color)? _getInspectionBadge(
+    InspectionStatus? status,
+    AppColorPalette colors,
+  ) {
     if (status == null) return null;
     switch (status) {
       case InspectionStatus.draft:
-        return ('RASCUNHO LOCAL', AppColors.neutral);
+        return ('RASCUNHO LOCAL', colors.neutral);
       case InspectionStatus.pending:
-        return ('EM FILA (PENDENTE)', AppColors.warning);
+        return ('EM FILA (PENDENTE)', colors.warning);
       case InspectionStatus.synced:
-        return ('INSPEÇÃO SINCRONIZADA', AppColors.success);
+        return ('INSPEÇÃO SINCRONIZADA', colors.success);
       case InspectionStatus.failed:
-        return ('FALHA NO SYNC', AppColors.danger);
+        return ('FALHA NO SYNC', colors.danger);
     }
   }
 
@@ -99,14 +102,16 @@ class WorkOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inspectionBadge = _getInspectionBadge(localInspectionStatus);
+    final colors = AppColors.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final inspectionBadge = _getInspectionBadge(localInspectionStatus, colors);
 
     return Card(
       elevation: 0,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-        side: const BorderSide(color: Color(0xFFE2E8F0)),
+        side: BorderSide(color: colorScheme.outlineVariant),
       ),
       child: InkWell(
         onTap: onTap,
@@ -121,22 +126,22 @@ class WorkOrderCard extends StatelessWidget {
                 children: [
                   Text(
                     workOrder.code,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
-                      color: Color(0xFF0B1E36),
+                      color: colorScheme.onSurface,
                     ),
                   ),
                   Row(
                     children: [
                       AppStatusBadge(
                         label: _translatePriority(workOrder.priority),
-                        color: _getPriorityColor(workOrder.priority),
+                        color: _getPriorityColor(workOrder.priority, colors),
                       ),
                       const SizedBox(width: 6),
                       AppStatusBadge(
                         label: _translateStatus(workOrder.status),
-                        color: _getStatusColor(workOrder.status),
+                        color: _getStatusColor(workOrder.status, colors),
                       ),
                     ],
                   ),
@@ -145,28 +150,28 @@ class WorkOrderCard extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 workOrder.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF0B1E36),
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 8),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.location_on_outlined,
                     size: 16,
-                    color: Colors.black54,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
                       workOrder.address,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: Colors.black87,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -175,18 +180,18 @@ class WorkOrderCard extends StatelessWidget {
               const SizedBox(height: 6),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.calendar_today_outlined,
                     size: 14,
-                    color: Colors.black54,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     'Programada para: ${_formatDateTime(workOrder.scheduledAt)}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: Colors.black87,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ],

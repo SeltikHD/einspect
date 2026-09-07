@@ -13,10 +13,12 @@ class OfflineBanner extends StatelessWidget {
 
     if (isOnline) return const SizedBox.shrink();
 
-    return const AppAlertBanner(
+    final colors = AppColors.of(context);
+
+    return AppAlertBanner(
       message: 'Sem conexão com a internet. Modo offline ativo.',
       icon: Icons.wifi_off,
-      color: AppColors.danger,
+      color: colors.danger,
     );
   }
 }

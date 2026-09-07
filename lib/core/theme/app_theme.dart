@@ -3,31 +3,52 @@ import 'package:einspect/core/theme/app_dimensions.dart';
 import 'package:flutter/material.dart';
 
 abstract final class AppTheme {
-  static ThemeData get light {
-    final colorScheme =
-        ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
-          brightness: Brightness.light,
-        ).copyWith(
-          primary: AppColors.primary,
-          onPrimary: AppColors.surface,
-          secondary: AppColors.navy,
-          surface: AppColors.surface,
-          error: AppColors.danger,
-        );
+  static ThemeData get light => _buildTheme(AppColors.light, Brightness.light);
+
+  static ThemeData get dark => _buildTheme(AppColors.dark, Brightness.dark);
+
+  static ThemeData _buildTheme(AppColorPalette colors, Brightness brightness) {
+    final colorScheme = brightness == Brightness.dark
+        ? ColorScheme.dark(
+            primary: colors.primary,
+            onPrimary: colors.background,
+            secondary: colors.primary,
+            onSecondary: colors.background,
+            surface: colors.surface,
+            onSurface: colors.text,
+            error: colors.danger,
+            onError: colors.background,
+            outline: colors.border,
+            outlineVariant: colors.border,
+            surfaceContainerHighest: colors.background,
+          )
+        : ColorScheme.light(
+            primary: colors.primary,
+            onPrimary: colors.surface,
+            secondary: colors.navy,
+            onSecondary: colors.surface,
+            surface: colors.surface,
+            onSurface: colors.text,
+            error: colors.danger,
+            onError: colors.surface,
+            outline: colors.border,
+            outlineVariant: colors.border,
+            surfaceContainerHighest: colors.background,
+          );
 
     return ThemeData(
       useMaterial3: true,
+      brightness: brightness,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: AppColors.background,
+      scaffoldBackgroundColor: colors.background,
       fontFamily: 'Roboto',
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.navy,
-        foregroundColor: AppColors.surface,
+      appBarTheme: AppBarTheme(
+        backgroundColor: colors.navy,
+        foregroundColor: colors.text,
         elevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
-          color: AppColors.surface,
+          color: colors.text,
           fontSize: 20,
           fontWeight: FontWeight.w700,
         ),
@@ -35,10 +56,10 @@ abstract final class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(0, AppDimensions.minTapTarget),
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.surface,
-          disabledBackgroundColor: AppColors.neutral.withValues(alpha: .35),
-          disabledForegroundColor: AppColors.surface,
+          backgroundColor: colors.primary,
+          foregroundColor: colorScheme.onPrimary,
+          disabledBackgroundColor: colors.neutral.withValues(alpha: .35),
+          disabledForegroundColor: colors.text.withValues(alpha: .55),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDimensions.radius),
           ),
@@ -48,8 +69,8 @@ abstract final class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           minimumSize: const Size(0, AppDimensions.minTapTarget),
-          foregroundColor: AppColors.primary,
-          side: const BorderSide(color: AppColors.primary),
+          foregroundColor: colors.primary,
+          side: BorderSide(color: colors.primary),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppDimensions.radius),
           ),
@@ -58,28 +79,28 @@ abstract final class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: colors.surface,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 14,
         ),
-        border: _inputBorder(AppColors.border),
-        enabledBorder: _inputBorder(AppColors.border),
-        focusedBorder: _inputBorder(AppColors.primary, width: 2),
-        errorBorder: _inputBorder(AppColors.danger),
-        focusedErrorBorder: _inputBorder(AppColors.danger, width: 2),
+        border: _inputBorder(colors.border),
+        enabledBorder: _inputBorder(colors.border),
+        focusedBorder: _inputBorder(colors.primary, width: 2),
+        errorBorder: _inputBorder(colors.danger),
+        focusedErrorBorder: _inputBorder(colors.danger, width: 2),
       ),
       cardTheme: CardThemeData(
         elevation: 0,
-        color: AppColors.surface,
+        color: colors.surface,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radius),
-          side: const BorderSide(color: AppColors.border),
+          side: BorderSide(color: colors.border),
         ),
       ),
-      dividerTheme: const DividerThemeData(
-        color: AppColors.border,
+      dividerTheme: DividerThemeData(
+        color: colors.border,
         thickness: 1,
         space: 1,
       ),

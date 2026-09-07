@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:einspect/core/theme/app_colors.dart';
 import 'package:einspect/core/widgets/app_button.dart';
 import 'package:einspect/core/widgets/app_card.dart';
 import 'package:einspect/core/widgets/geofence_warning.dart';
@@ -100,6 +99,8 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
           _observationController.text = state.observation;
         }
 
+        final colorScheme = Theme.of(context).colorScheme;
+
         return Scaffold(
           appBar: AppBar(title: Text('Inspeção: ${widget.workOrder.code}')),
           body: SingleChildScrollView(
@@ -125,7 +126,7 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
 
                 // Card da OS
                 AppCard(
-                  color: AppColors.primary.withValues(alpha: .08),
+                  color: colorScheme.primaryContainer,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -139,9 +140,9 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                       const SizedBox(height: 4),
                       Text(
                         widget.workOrder.address,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: Colors.black87,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -168,8 +169,8 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                         : 'Descreva o estado do ativo (mínimo 10 caracteres)',
                     filled: true,
                     fillColor: state.isReadOnly
-                        ? Colors.grey.shade100
-                        : Colors.white,
+                        ? colorScheme.surfaceContainerHighest
+                        : colorScheme.surface,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -201,8 +202,8 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: state.isReadOnly
-                        ? Colors.grey.shade100
-                        : Colors.white,
+                        ? colorScheme.surfaceContainerHighest
+                        : colorScheme.surface,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -227,9 +228,12 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                         ),
                         if (!state.isReadOnly)
                           IconButton(
-                            icon: const CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: Icon(Icons.close, color: Colors.black),
+                            icon: CircleAvatar(
+                              backgroundColor: colorScheme.surface,
+                              child: Icon(
+                                Icons.close,
+                                color: colorScheme.onSurface,
+                              ),
                             ),
                             onPressed: () => context
                                 .read<InspectionFormBloc>()
@@ -283,10 +287,10 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: state.isReadOnly
-                        ? Colors.grey.shade100
-                        : Colors.white,
+                        ? colorScheme.surfaceContainerHighest
+                        : colorScheme.surface,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: const Color(0xFFCFD8DC)),
+                    border: Border.all(color: colorScheme.outlineVariant),
                   ),
                   child: Row(
                     children: [
@@ -305,9 +309,11 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                                 style: const TextStyle(fontSize: 13),
                               ),
                             ] else
-                              const Text(
+                              Text(
                                 'Nenhuma coordenada obtida',
-                                style: TextStyle(color: Colors.black54),
+                                style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
                               ),
                           ],
                         ),
@@ -328,12 +334,12 @@ class _InspectionFormPageState extends State<InspectionFormPage> {
                                   const InspectionLocationRequested(),
                                 ),
                           icon: state.isFetchingLocation
-                              ? const SizedBox(
+                              ? SizedBox(
                                   height: 16,
                                   width: 16,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: Colors.white,
+                                    color: colorScheme.onPrimary,
                                   ),
                                 )
                               : const Icon(Icons.my_location, size: 18),
