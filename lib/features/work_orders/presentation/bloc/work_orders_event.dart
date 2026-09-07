@@ -23,3 +23,9 @@ final class WorkOrdersFilterChanged extends WorkOrdersEvent {
 
   const WorkOrdersFilterChanged({this.sort, this.statusFilter});
 }
+
+final class WorkOrdersLocalLoadRequested extends WorkOrdersEvent {
+  final String userId;
+
+  const WorkOrdersLocalLoadRequested({required this.userId});
+}

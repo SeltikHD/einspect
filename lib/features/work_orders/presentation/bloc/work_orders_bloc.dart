@@ -21,6 +21,7 @@ class WorkOrdersBloc extends Bloc<WorkOrdersEvent, WorkOrdersState> {
     required this._inspectionsRepository,
   }) : super(const WorkOrdersInitial()) {
     on<WorkOrdersFetchRequested>(_onFetchRequested);
+    on<WorkOrdersLocalLoadRequested>(_onLocalLoadRequested);
     on<WorkOrdersFilterChanged>(_onFilterChanged);
   }
 
@@ -109,6 +110,35 @@ class WorkOrdersBloc extends Bloc<WorkOrdersEvent, WorkOrdersState> {
         ),
       );
     }
+  }
+
+  Future<void> _onLocalLoadRequested(
+    WorkOrdersLocalLoadRequested event,
+    Emitter<WorkOrdersState> emit,
+  ) async {
+    _currentUserId = event.userId;
+
+    if (_cachedOrders.isEmpty) {
+      emit(
+        const WorkOrdersError(
+          message: 'Nenhuma ordem de serviço encontrada no cache local.',
+        ),
+      );
+      return;
+    }
+
+    emit(const WorkOrdersLoading());
+
+    try {
+      final localInspections = await _inspectionsRepository.getInspections(
+        userId: _currentUserId,
+      );
+      _inspectionStatuses = {
+        for (final i in localInspections) i.workOrderId: i.status,
+      };
+    } catch (_) {}
+
+    _emitFilteredOrders(emit);
   }
 
   int _priorityWeight(String priority) {

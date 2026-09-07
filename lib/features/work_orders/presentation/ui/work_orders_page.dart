@@ -200,6 +200,19 @@ class WorkOrdersPage extends StatelessWidget {
                             icon: const Icon(Icons.refresh),
                             label: const Text('Tentar novamente'),
                           ),
+                          const SizedBox(height: 16),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              context.read<WorkOrdersBloc>().add(
+                                WorkOrdersLocalLoadRequested(userId: userId),
+                              );
+                            },
+                            icon: const Icon(Icons.refresh),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: colorScheme.secondary,
+                            ),
+                            label: const Text('Carregar localmente'),
+                          ),
                         ],
                       ),
                     ),
