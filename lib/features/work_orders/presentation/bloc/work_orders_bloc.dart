@@ -12,7 +12,7 @@ class WorkOrdersBloc extends Bloc<WorkOrdersEvent, WorkOrdersState> {
   final InspectionsRepository _inspectionsRepository;
   List<WorkOrderEntity> _cachedOrders = [];
   Map<String, InspectionStatus> _inspectionStatuses = {};
-  WorkOrderSort _currentSort = WorkOrderSort.urgent;
+  WorkOrderSort _currentSort = WorkOrderSort.scheduled;
   String? _currentStatus;
   String _currentUserId = '';
 
