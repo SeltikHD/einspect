@@ -89,6 +89,8 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
 
   @override
   Future<void> syncPendingQueue({required String userId}) async {
+    if (!await _networkInfo.isConnected) return;
+
     final queue = await _localDataSource.findSyncQueue(userId: userId);
     if (queue.isEmpty) return;
 
