@@ -76,7 +76,7 @@ void main() {
         () =>
             repository.retryInspection(clientId: 'client-1', userId: 'user-1'),
       ).thenAnswer((_) async {
-        return null;
+        return;
       });
       return InspectionsHistoryBloc(repository: repository);
     },
@@ -108,7 +108,7 @@ void main() {
     build: () {
       when(() => repository.syncPendingQueue(userId: 'user-1'))
           .thenAnswer((_) async {
-            return null;
+            return;
           });
       when(() => repository.getInspections(userId: 'user-1'))
           .thenAnswer((_) async => inspections);

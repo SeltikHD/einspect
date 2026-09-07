@@ -112,7 +112,7 @@ void main() {
       ).thenAnswer((_) async => '/documents/permanent.png');
       when(() => repository.deletePhoto('/documents/permanent.png'))
           .thenAnswer((_) async {
-            return null;
+            return;
           });
     },
     act: (bloc) async {
@@ -145,7 +145,7 @@ void main() {
     'salva rascunho com status draft',
     build: () => InspectionFormBloc(repository: repository),
     setUp: () => when(() => repository.saveDraft(any())).thenAnswer((_) async {
-      return null;
+      return;
     }),
     act: (bloc) async {
       bloc.add(startedEvent());
@@ -214,7 +214,7 @@ void main() {
             : makeInspection(status: InspectionStatus.synced);
       });
       when(() => repository.submitInspection(any())).thenAnswer((_) async {
-        return null;
+        return;
       });
     },
     act: (bloc) async {
@@ -253,7 +253,7 @@ void main() {
             : makeInspection(status: InspectionStatus.pending);
       });
       when(() => repository.submitInspection(any())).thenAnswer((_) async {
-        return null;
+        return;
       });
     },
     act: (bloc) async {

@@ -39,7 +39,7 @@ void main() {
     when(() => networkInfo.isConnected).thenAnswer((_) async => true);
     when(() => localDataSource.insertOrUpdate(any<InspectionModel>()))
         .thenAnswer((_) async {
-          return null;
+          return;
         });
   });
 
