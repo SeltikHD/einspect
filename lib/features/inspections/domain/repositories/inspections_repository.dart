@@ -1,4 +1,4 @@
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
 
 enum SyncBatchStatus { inProgress, success, failure }
 
@@ -47,4 +47,6 @@ abstract interface class InspectionsRepository {
 
   /// Broadcasts sync progress notifications across the application
   Stream<SyncBatchStatus> get syncStatusStream;
+
+  void dispose();
 }

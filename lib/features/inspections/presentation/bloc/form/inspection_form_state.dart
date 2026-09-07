@@ -1,4 +1,4 @@
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
 
 enum FormSubmissionStatus {
   idle,

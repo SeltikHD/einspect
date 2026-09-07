@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:orbytis_challenge/core/database/db_helper.dart';
-import 'package:orbytis_challenge/core/database/tables/inspections_table.dart';
-import 'package:orbytis_challenge/core/errors/failure.dart';
-import 'package:orbytis_challenge/features/inspections/data/models/inspection_model.dart';
+import 'package:einspect/core/database/db_helper.dart';
+import 'package:einspect/core/database/tables/inspections_table.dart';
+import 'package:einspect/core/errors/failure.dart';
+import 'package:einspect/features/inspections/data/models/inspection_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 

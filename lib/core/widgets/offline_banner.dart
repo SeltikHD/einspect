@@ -1,7 +1,6 @@
+import 'package:einspect/core/network/network_status_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:orbytis_challenge/core/network/network_status_cubit.dart';
 
 class OfflineBanner extends StatelessWidget {
   const OfflineBanner({super.key});

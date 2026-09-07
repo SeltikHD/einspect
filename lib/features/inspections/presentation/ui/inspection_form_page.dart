@@ -1,13 +1,13 @@
 import 'dart:io';
 
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/inspections/presentation/bloc/form/inspection_form_bloc.dart';
+import 'package:einspect/features/inspections/presentation/bloc/form/inspection_form_event.dart';
+import 'package:einspect/features/inspections/presentation/bloc/form/inspection_form_state.dart';
+import 'package:einspect/features/work_orders/domain/entities/work_order_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_bloc.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_event.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_state.dart';
-import 'package:orbytis_challenge/features/work_orders/domain/entities/work_order_entity.dart';
 
 class InspectionFormPage extends StatefulWidget {
   final WorkOrderEntity workOrder;

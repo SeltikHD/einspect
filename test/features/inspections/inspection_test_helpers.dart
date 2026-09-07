@@ -1,5 +1,5 @@
-import 'package:orbytis_challenge/features/inspections/data/models/inspection_model.dart';
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/inspections/data/models/inspection_model.dart';
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
 
 InspectionEntity makeInspection({
   String clientId = 'client-1',

@@ -1,8 +1,8 @@
-import 'package:orbytis_challenge/features/auth/data/datasources/auth_local_data_source.dart';
-import 'package:orbytis_challenge/features/auth/data/datasources/auth_remote_data_source.dart';
-import 'package:orbytis_challenge/features/auth/domain/entities/auth_session_entity.dart';
-import 'package:orbytis_challenge/features/auth/domain/entities/user_entity.dart';
-import 'package:orbytis_challenge/features/auth/domain/repositories/auth_repository.dart';
+import 'package:einspect/features/auth/data/datasources/auth_local_data_source.dart';
+import 'package:einspect/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:einspect/features/auth/domain/entities/auth_session_entity.dart';
+import 'package:einspect/features/auth/domain/entities/user_entity.dart';
+import 'package:einspect/features/auth/domain/repositories/auth_repository.dart';
 
 final class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;

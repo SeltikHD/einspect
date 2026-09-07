@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/inspections/domain/repositories/inspections_repository.dart';
+import 'package:einspect/features/inspections/presentation/bloc/history/inspections_history_bloc.dart';
+import 'package:einspect/features/inspections/presentation/bloc/history/inspections_history_event.dart';
+import 'package:einspect/features/inspections/presentation/bloc/history/inspections_history_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
-import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_bloc.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_event.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_state.dart';
 
 import '../../../inspection_test_helpers.dart';
 
@@ -75,7 +75,9 @@ void main() {
       when(
         () =>
             repository.retryInspection(clientId: 'client-1', userId: 'user-1'),
-      ).thenAnswer((_) async {});
+      ).thenAnswer((_) async {
+        return null;
+      });
       return InspectionsHistoryBloc(repository: repository);
     },
     act: (bloc) async {
@@ -105,7 +107,9 @@ void main() {
     'sincroniza manualmente, sinaliza progresso e atualiza a lista',
     build: () {
       when(() => repository.syncPendingQueue(userId: 'user-1'))
-          .thenAnswer((_) async {});
+          .thenAnswer((_) async {
+            return null;
+          });
       when(() => repository.getInspections(userId: 'user-1'))
           .thenAnswer((_) async => inspections);
       return InspectionsHistoryBloc(repository: repository);

@@ -1,6 +1,6 @@
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
-import 'package:orbytis_challenge/features/work_orders/domain/entities/work_order_entity.dart';
-import 'package:orbytis_challenge/features/work_orders/presentation/bloc/work_orders_event.dart';
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/work_orders/domain/entities/work_order_entity.dart';
+import 'package:einspect/features/work_orders/presentation/bloc/work_orders_event.dart';
 
 sealed class WorkOrdersState {
   const WorkOrdersState();

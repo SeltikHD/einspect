@@ -1,10 +1,9 @@
+import 'package:einspect/core/errors/failure.dart';
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/inspections/domain/repositories/inspections_repository.dart';
+import 'package:einspect/features/inspections/presentation/bloc/history/inspections_history_event.dart';
+import 'package:einspect/features/inspections/presentation/bloc/history/inspections_history_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:orbytis_challenge/core/errors/failure.dart';
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
-import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_event.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_state.dart';
 
 class InspectionsHistoryBloc
     extends Bloc<InspectionsHistoryEvent, InspectionsHistoryState> {

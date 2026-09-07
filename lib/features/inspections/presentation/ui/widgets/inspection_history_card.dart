@@ -1,6 +1,5 @@
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
 import 'package:flutter/material.dart';
-
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
 
 class InspectionHistoryCard extends StatelessWidget {
   final InspectionEntity inspection;

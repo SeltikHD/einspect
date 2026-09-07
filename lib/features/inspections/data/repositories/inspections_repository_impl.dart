@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:orbytis_challenge/core/errors/failure.dart';
-import 'package:orbytis_challenge/core/network/network_info.dart';
-import 'package:orbytis_challenge/features/inspections/data/datasources/inspections_local_data_source.dart';
-import 'package:orbytis_challenge/features/inspections/data/datasources/inspections_remote_data_source.dart';
-import 'package:orbytis_challenge/features/inspections/data/models/inspection_model.dart';
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
-import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
+import 'package:einspect/core/errors/failure.dart';
+import 'package:einspect/core/network/network_info.dart';
+import 'package:einspect/features/inspections/data/datasources/inspections_local_data_source.dart';
+import 'package:einspect/features/inspections/data/datasources/inspections_remote_data_source.dart';
+import 'package:einspect/features/inspections/data/models/inspection_model.dart';
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/inspections/domain/repositories/inspections_repository.dart';
 
 final class InspectionsRepositoryImpl implements InspectionsRepository {
   final InspectionsLocalDataSource _localDataSource;
@@ -153,6 +153,12 @@ final class InspectionsRepositoryImpl implements InspectionsRepository {
 
   @override
   Stream<SyncBatchStatus> get syncStatusStream => _syncStatusController.stream;
+
+  @override
+  void dispose() {
+    stopAutoSync();
+    _syncStatusController.close();
+  }
 
   @override
   void startAutoSync(String userId) {

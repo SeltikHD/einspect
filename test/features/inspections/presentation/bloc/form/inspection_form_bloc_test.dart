@@ -1,11 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/inspections/domain/repositories/inspections_repository.dart';
+import 'package:einspect/features/inspections/presentation/bloc/form/inspection_form_bloc.dart';
+import 'package:einspect/features/inspections/presentation/bloc/form/inspection_form_event.dart';
+import 'package:einspect/features/inspections/presentation/bloc/form/inspection_form_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
-import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_bloc.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_event.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_state.dart';
 
 import '../../../inspection_test_helpers.dart';
 
@@ -111,7 +111,9 @@ void main() {
         ),
       ).thenAnswer((_) async => '/documents/permanent.png');
       when(() => repository.deletePhoto('/documents/permanent.png'))
-          .thenAnswer((_) async {});
+          .thenAnswer((_) async {
+            return null;
+          });
     },
     act: (bloc) async {
       bloc.add(startedEvent());
@@ -142,8 +144,9 @@ void main() {
   blocTest<InspectionFormBloc, InspectionFormState>(
     'salva rascunho com status draft',
     build: () => InspectionFormBloc(repository: repository),
-    setUp: () =>
-        when(() => repository.saveDraft(any())).thenAnswer((_) async {}),
+    setUp: () => when(() => repository.saveDraft(any())).thenAnswer((_) async {
+      return null;
+    }),
     act: (bloc) async {
       bloc.add(startedEvent());
       await Future<void>.delayed(const Duration(milliseconds: 10));
@@ -210,7 +213,9 @@ void main() {
             ? makeInspection(status: InspectionStatus.draft)
             : makeInspection(status: InspectionStatus.synced);
       });
-      when(() => repository.submitInspection(any())).thenAnswer((_) async {});
+      when(() => repository.submitInspection(any())).thenAnswer((_) async {
+        return null;
+      });
     },
     act: (bloc) async {
       bloc.add(startedEvent());
@@ -247,7 +252,9 @@ void main() {
             ? makeInspection(status: InspectionStatus.draft)
             : makeInspection(status: InspectionStatus.pending);
       });
-      when(() => repository.submitInspection(any())).thenAnswer((_) async {});
+      when(() => repository.submitInspection(any())).thenAnswer((_) async {
+        return null;
+      });
     },
     act: (bloc) async {
       bloc.add(startedEvent());

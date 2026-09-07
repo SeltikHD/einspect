@@ -1,11 +1,11 @@
+import 'package:einspect/core/errors/failure.dart';
+import 'package:einspect/core/network/network_info.dart';
+import 'package:einspect/features/inspections/data/datasources/inspections_local_data_source.dart';
+import 'package:einspect/features/inspections/data/datasources/inspections_remote_data_source.dart';
+import 'package:einspect/features/inspections/data/models/inspection_model.dart';
+import 'package:einspect/features/inspections/data/repositories/inspections_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:orbytis_challenge/core/errors/failure.dart';
-import 'package:orbytis_challenge/core/network/network_info.dart';
-import 'package:orbytis_challenge/features/inspections/data/datasources/inspections_local_data_source.dart';
-import 'package:orbytis_challenge/features/inspections/data/datasources/inspections_remote_data_source.dart';
-import 'package:orbytis_challenge/features/inspections/data/models/inspection_model.dart';
-import 'package:orbytis_challenge/features/inspections/data/repositories/inspections_repository_impl.dart';
 
 import '../../inspection_test_helpers.dart';
 
@@ -38,7 +38,9 @@ void main() {
     );
     when(() => networkInfo.isConnected).thenAnswer((_) async => true);
     when(() => localDataSource.insertOrUpdate(any<InspectionModel>()))
-        .thenAnswer((_) async {});
+        .thenAnswer((_) async {
+          return null;
+        });
   });
 
   test('bloqueia submissão de inspeção já somente leitura', () async {

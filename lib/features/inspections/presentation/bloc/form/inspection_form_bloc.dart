@@ -1,10 +1,10 @@
+import 'package:einspect/core/errors/failure.dart';
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/inspections/domain/repositories/inspections_repository.dart';
+import 'package:einspect/features/inspections/presentation/bloc/form/inspection_form_event.dart';
+import 'package:einspect/features/inspections/presentation/bloc/form/inspection_form_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:orbytis_challenge/core/errors/failure.dart';
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
-import 'package:orbytis_challenge/features/inspections/domain/repositories/inspections_repository.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_event.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/form/inspection_form_state.dart';
 import 'package:uuid/uuid.dart';
 
 class InspectionFormBloc

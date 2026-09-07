@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:orbytis_challenge/core/errors/failure.dart';
-import 'package:orbytis_challenge/features/auth/data/models/login_response_model.dart';
-import 'package:orbytis_challenge/features/auth/data/models/user_model.dart';
-import 'package:orbytis_challenge/features/auth/domain/entities/user_entity.dart';
+import 'package:einspect/core/errors/failure.dart';
+import 'package:einspect/features/auth/data/models/login_response_model.dart';
+import 'package:einspect/features/auth/data/models/user_model.dart';
+import 'package:einspect/features/auth/domain/entities/user_entity.dart';
 
 abstract interface class AuthRemoteDataSource {
   Future<LoginResponseModel> login({

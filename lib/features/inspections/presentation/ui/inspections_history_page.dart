@@ -1,14 +1,13 @@
+import 'package:einspect/core/widgets/app_filter_chip.dart';
+import 'package:einspect/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:einspect/features/auth/presentation/bloc/auth_state.dart';
+import 'package:einspect/features/inspections/domain/entities/inspection_entity.dart';
+import 'package:einspect/features/inspections/presentation/bloc/history/inspections_history_bloc.dart';
+import 'package:einspect/features/inspections/presentation/bloc/history/inspections_history_event.dart';
+import 'package:einspect/features/inspections/presentation/bloc/history/inspections_history_state.dart';
+import 'package:einspect/features/inspections/presentation/ui/widgets/inspection_history_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:orbytis_challenge/core/widgets/app_filter_chip.dart';
-import 'package:orbytis_challenge/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:orbytis_challenge/features/auth/presentation/bloc/auth_state.dart';
-import 'package:orbytis_challenge/features/inspections/domain/entities/inspection_entity.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_bloc.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_event.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/bloc/history/inspections_history_state.dart';
-import 'package:orbytis_challenge/features/inspections/presentation/ui/widgets/inspection_history_card.dart';
 
 class InspectionsHistoryPage extends StatelessWidget {
   const InspectionsHistoryPage({super.key});

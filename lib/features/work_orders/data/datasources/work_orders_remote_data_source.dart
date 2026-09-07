@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import 'package:orbytis_challenge/core/errors/failure.dart';
-import 'package:orbytis_challenge/features/work_orders/data/models/work_order_model.dart';
+import 'package:einspect/core/errors/failure.dart';
+import 'package:einspect/features/work_orders/data/models/work_order_model.dart';
 
 abstract interface class WorkOrdersRemoteDataSource {
   Future<List<WorkOrderModel>> getWorkOrders({String? status});

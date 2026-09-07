@@ -1,4 +1,4 @@
-import 'package:orbytis_challenge/core/database/tables/database_table.dart';
+import 'package:einspect/core/database/tables/database_table.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

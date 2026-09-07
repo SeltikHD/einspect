@@ -1,6 +1,5 @@
+import 'package:einspect/features/auth/domain/entities/user_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import 'package:orbytis_challenge/features/auth/domain/entities/user_entity.dart';
 
 part 'user_model.freezed.dart';
 part 'user_model.g.dart';

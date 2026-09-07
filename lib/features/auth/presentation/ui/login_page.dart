@@ -1,9 +1,8 @@
+import 'package:einspect/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:einspect/features/auth/presentation/bloc/auth_state.dart';
+import 'package:einspect/features/auth/presentation/ui/widgets/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:orbytis_challenge/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:orbytis_challenge/features/auth/presentation/bloc/auth_state.dart';
-import 'package:orbytis_challenge/features/auth/presentation/ui/widgets/login_form.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
