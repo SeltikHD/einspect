@@ -33,7 +33,15 @@
 	],
 	"compounds": [
 		{
-			"name": "App (Device) + Mock API",
+			"name": "App (Device) + Mock API - Linux",
+			"configurations": [
+				"API: Mock (npm start)",
+				"Flutter: Android Device"
+			],
+			"preLaunchTask": "adb-reverse-linux"
+		},
+		{
+			"name": "App (Device) + Mock API - Windows",
 			"configurations": [
 				"API: Mock (npm start)",
 				"Flutter: Android Device"
