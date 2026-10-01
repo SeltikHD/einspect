@@ -16,7 +16,7 @@ jobs:
     # --------------------------------------------------------
     static_analysis_and_security:
         name: Code Analysis & Security Gates
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         steps:
             - name: Checkout Code
               uses: actions/checkout@v4
@@ -95,13 +95,14 @@ jobs:
                   java-version: "17"
 
             - name: Set up Android SDK
-              uses: android-actions/setup-android@v3
+              uses: android-actions/setup-android@v4
               with:
                   cmdline-tools-version: "latest"
                   packages: >-
                       cmdline-tools;latest
                       platform-tools
-                      platforms;android-37
+                      platforms;android-37.0
+                      build-tools;37.0.0
 
             - name: Set up Flutter
               uses: subosito/flutter-action@v2
