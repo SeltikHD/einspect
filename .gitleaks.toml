@@ -1,0 +1,3 @@
+[allowlist]
+description = "Ignorar arquivos de documentacao"
+paths = ['''docs/CONTRATO_API\.md''']
