@@ -108,7 +108,23 @@ jobs:
 
             # Gate 3.2
             - name: Check App Size Delta
-              uses: juliazo/flutter-size-action@v2
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  apk_path: "build/app/outputs/flutter-apk/app-debug.apk"
+              shell: bash
+              run: |
+                set -euo pipefail
+                apk="build/app/outputs/flutter-apk/app-debug.apk"
+                max_size_mb=50
+
+                [[ -f "$apk" ]] || {
+                  echo "::error::APK was not generated at $apk"
+                  exit 1
+                }
+
+                size_bytes=$(stat -c%s "$apk")
+                size_mb=$(( (size_bytes + 1024 * 1024 - 1) / (1024 * 1024) ))
+
+                echo "APK size: ${size_mb} MiB (${size_bytes} bytes)"
+
+                if (( size_mb > max_size_mb )); then
+                  echo "::error::APK exceeds the ${max_size_mb} MiB limit"
+                  exit 1
+                fi
